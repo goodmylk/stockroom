@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container" style="width: 60%;">
+<form method="POST" action="{% url 'addbatch' %}" >
+  {% csrf_token %}
+  <div class="py-5 text-center">
+    <h2 class="display-5">Add New Batch</h2>
+  </div>
+  {% if error %}
+  {{ error }}
+  <br />
+  <br />
+  {% endif %}
+  <div class="container pt-2">
+    <div class="row justify-content-between">
+      <div class="col-md-6">
+        <label for="product">Select Product</label>
+        <select class="custom-select d-block w-100" id="product" name='product'>
+          <option value="">Choose...</option>
+          {% for product in products.all %}
+          <option value= "{{ product.pk }}">{{ product.productname }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-6">
+        <label for="manufacturedate">Manufacture Date</label>
+        <input type="datetime-local" class="form-control" id="date" name='date' placeholder="Date">
+      </div>
+      <div class="col-md-6">
+        <label for="batch">Batch Number</label>
+        <input type="text" class="form-control" id="batch" placeholder="Batch" name='batch'>
+      </div>
+      <div class="col-md-6">
+        <label for="qnt">Quantity</label>
+        <input type="text" class="form-control" id="qnt" placeholder="Quantity" name='qnt'>
+      </div>
+    </div>
+  </div>
+  <div class="container pt-3">
+    <div class="row justify-content-between">
+      <h3 class="mb-3">Comments</h3>
+      <div class="col-md-6">
+        <textarea class="form-control" rows="3" id="comments" name='comments'></textarea>
+      </div>
+      <div class="col-md-4 ">
+        <button class="btn btn-primary btn-lg btn-block" type="submit">Submit</button>
+      </div>
+    </div>
+  </div>
+</form>
+</div>
+{% endblock %}

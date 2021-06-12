@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+<div class="container" style="width: 60%;">
+  <form method="POST" action="{% url 'notdelivered' %}" >
+    {% csrf_token %}
+    <div class="py-5 text-center">
+      <h2 class="display-5">Add NDR</h2>
+    </div>
+    {% if error %}
+    {{ error }}
+    <br />
+    <br />
+    {% endif %}
+    <div class="container pt-2">
+      <div class="row justify-content-between">
+        <div class="col-md-6">
+          <label for="manufacturedate">Delivery Date</label>
+          <input type="datetime-local" class="form-control" id="date" name='date' placeholder="Date">
+        </div>
+        <div class="col-md-5">
+          <label for="batch">Order ID</label>
+          <input type="text" class="form-control" id="orderid" placeholder="Order ID" name='orderid'>
+        </div>
+        </div>
+      <div class="row justify-content-between pt-3">
+        <div class="col-md-6">
+          <label for="reason">Select Reason</label>
+          <select class="d-block w-100 " id="reason" name='reason'>
+            <option value="" selected="selected">Select Reason</option>
+            {% for reason in reasons %}
+            <option value="{{reason}}">{{ reason }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="col-md-5">
+          <label for="city">Select City</label>
+          <select class="d-block w-100 " id="city" name='city'>
+            <option value="" selected="selected">Select City</option>
+            {% for warhouse in warhouses.all %}
+            <option value="{{warhouse.id}}">{{ warhouse.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+      {% for key, values in batches.items %}
+      <div class="row justify-content-between pt-4">
+        <div class="col-md-4">
+          <h5 class="mb-3">{{ key }}</h5>
+        </div>
+        <div class="col-md-4">
+          <label for="product">Select Batch</label>
+          <select class="custom-select d-block w-100" id="topic" name= "batch {{ key }}">
+            <option value="" selected="selected">Select Batch</option>
+            {% for v in values %}
+            <option value="{{v}}">{{ v }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="col-md-4">
+          <label for="qnt">Quantity</label>
+          <input type="text" class="form-control" id="qnt" placeholder="Quantity" name='qnt {{ key }}'>
+        </div>
+      </div>
+      {% endfor %}
+      <div class="container pt-3">
+        <div class="row justify-content-between">
+          <h3 class="mb-3">Comments</h3>
+          <div class="col-md-6">
+            <textarea class="form-control" rows="3" id="comments" name='comments'></textarea>
+          </div>
+          <div class="col-md-4 ">
+            <button class="btn btn-primary btn-lg btn-block" type="submit">Submit</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    </form>
+  </div>
+
+{% endblock %}
