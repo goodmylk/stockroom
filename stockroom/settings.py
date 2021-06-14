@@ -74,7 +74,7 @@ DATABASES = {
         'USER': 'postgres',
         'PASSWORD': 'basedata',
         'HOST': 'localhost',
-        'PORT': '5433',
+        'PORT': '5432',
     }
 }
 
@@ -129,4 +129,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 try:
     from local_settings import *
 except ImportError:
-    pass 
+    pass
