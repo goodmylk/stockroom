@@ -7,12 +7,12 @@ from .models import Instock, Delivery, Notdelivered, Returnreports
 from django.utils import timezone
 
 #variables
-"""d = {}
+d = {}
 for x in list(Product.objects.values_list('id', flat=True)):
     name = list(Product.objects.values_list('productname', flat=True).filter(pk = x))
     y = list(Batch.objects.values_list('batch_number', flat=True).filter(productname = x))
     if len(y) > 0:
-        d[name[0]] = [str(z) for z in y]"""
+        d[name[0]] = [str(z) for z in y]
 
 warhouses = Warehouse.objects
 
