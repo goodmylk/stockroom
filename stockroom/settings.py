@@ -74,7 +74,7 @@ DATABASES = {
         'USER': 'postgres',
         'PASSWORD': 'basedata',
         'HOST': 'localhost',
-        'PORT': '5432',
+        'PORT': '5433',
     }
 }
 

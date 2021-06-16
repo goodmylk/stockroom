@@ -5,14 +5,19 @@ from products.models import Product, Batch
 from warehouse.models import Warehouse
 from .models import Instock, Delivery, Notdelivered, Returnreports
 from django.utils import timezone
+from django.views.decorators.cache import never_cache
 
 #variables
-d = {}
-for x in list(Product.objects.values_list('id', flat=True)):
-    name = list(Product.objects.values_list('productname', flat=True).filter(pk = x))
-    y = list(Batch.objects.values_list('batch_number', flat=True).filter(productname = x))
-    if len(y) > 0:
-        d[name[0]] = [str(z) for z in y]
+def get_updated_data():
+    d = {}
+    pr = Product.objects
+    bt = Batch.objects
+    for x in list(pr.values_list('id', flat=True)):
+        name = list(pr.values_list('productname', flat=True).filter(pk = x))
+        y = list(bt.values_list('batch_number', flat=True).filter(productname = x))
+        if len(y) > 0:
+            d[name[0]] = [str(z) for z in y]
+    return d
 
 warhouses = Warehouse.objects
 
@@ -21,6 +26,7 @@ reason_list = ["Address not found","Phone not reachable/switched off","Customer 
 
 #Views
 @login_required(login_url="/accounts/login")
+@never_cache
 def instock(request):
     if request.method == 'POST':
         if request.POST['date'] and request.POST['city']:
@@ -39,11 +45,14 @@ def instock(request):
                     add_ir.save()
             return redirect('/')
         else:
+            d = get_updated_data()
             return render(request, 'reports/instock.html', {'error':'Date and City are required.','batches': d, 'warhouses':warhouses})
     else:
+        d = get_updated_data()
         return render(request, 'reports/instock.html', {'batches': d, 'warhouses':warhouses})
 
 @login_required(login_url="/accounts/login")
+@never_cache
 def delivery(request):
     if request.method == 'POST':
         if request.POST['date'] and request.POST['city'] and request.POST['type']:
@@ -63,12 +72,15 @@ def delivery(request):
                     add_dr.save()
             return redirect('/')
         else:
+            d = get_updated_data()
             return render(request, 'reports/delivery.html', {'error':'Date, Type and City are required.','batches': d, 'warhouses':warhouses})
     else:
+        d = get_updated_data()
         return render(request, 'reports/delivery.html', {'batches': d, 'warhouses':warhouses})
 
 
 @login_required(login_url="/accounts/login")
+@never_cache
 def notdelivered(request):
     if request.method == 'POST':
         if request.POST['date'] and request.POST['orderid'] and request.POST['reason'] and request.POST['city']:
@@ -88,12 +100,14 @@ def notdelivered(request):
 
             return redirect('/')
         else:
+            d = get_updated_data()
             return render(request, 'reports/notdelivered.html', {'error':'Date, Order ID, Reason and City are required.','batches': d, 'reasons':reason_list, 'warhouses':warhouses})
     else:
-
+        d = get_updated_data()
         return render(request, 'reports/notdelivered.html', {'batches': d, 'reasons':reason_list, 'warhouses':warhouses})
 
 @login_required(login_url="/accounts/login")
+@never_cache
 def returnreports(request):
     if request.method == 'POST':
         if request.POST['date'] and request.POST['city'] and request.POST['type']:
@@ -114,7 +128,9 @@ def returnreports(request):
 
             return redirect('/')
         else:
+            d = get_updated_data()
             return render(request, 'reports/returnreports.html', {'error':'Date, Type and City are required.','batches': d, 'warhouses':warhouses})
 
     else:
+        d = get_updated_data()
         return render(request, 'reports/returnreports.html', {'batches': d, 'warhouses':warhouses})
