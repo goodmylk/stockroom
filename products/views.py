@@ -24,7 +24,9 @@ def addbatch(request):
                 batch.comments = request.POST['comments']
 
             batch.save()
-            return redirect('/')
+            msg = {}
+            msg['message'] = 'Batch added successfully.'
+            return render(request, 'batch/addbatch.html', {'message':msg, 'products':products})
         else:
             return render(request, 'batch/addbatch.html',{'error':'Product, Batch Number and Quantity are required.','products':products})
     else:

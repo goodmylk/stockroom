@@ -14,6 +14,11 @@
     <br />
     <br />
     {% endif %}
+    {% if message %}
+    <ul>
+  	   <h6 style="color:green;">{{ message.message }}</h6>
+    </ul>
+    {% endif %}
     <div class="container pt-2">
       <div class="row justify-content-between">
         <div class="col-md-6">

@@ -44,7 +44,9 @@ def instock(request):
                     	add_ir.comments = request.POST['comments']
 
                     add_ir.save()
-            return redirect('/')
+            msg = {}
+            msg['message'] = 'Instock report saved successfully.'
+            return render(request, 'reports/instock.html', {'message':msg, 'batches': d, 'warhouses':warhouses})
         else:
             return render(request, 'reports/instock.html', {'error':'Date and City are required.','batches': d, 'warhouses':warhouses})
     else:
@@ -70,7 +72,9 @@ def delivery(request):
                     	add_dr.comments = request.POST['comments']
 
                     add_dr.save()
-            return redirect('/')
+            msg = {}
+            msg['message'] = 'Delivery report saved successfully.'
+            return render(request, 'reports/delivery.html', {'message':msg, 'batches': d, 'warhouses':warhouses})
         else:
             return render(request, 'reports/delivery.html', {'error':'Date, Type and City are required.','batches': d, 'warhouses':warhouses})
     else:
@@ -96,8 +100,9 @@ def notdelivered(request):
                     if request.POST['comments']:
                     	add_ndr.comments = request.POST['comments']
                     add_ndr.save()
-
-            return redirect('/')
+            msg = {}
+            msg['message'] = 'NDR saved successfully.'
+            return render(request, 'reports/notdelivered.html', {'message':msg, 'batches': d, 'warhouses':warhouses})
         else:
             return render(request, 'reports/notdelivered.html', {'error':'Date, Order ID, Reason and City are required.','batches': d, 'reasons':reason_list, 'warhouses':warhouses})
     else:
@@ -123,8 +128,9 @@ def returnreports(request):
                     	add_dr.comments = request.POST['comments']
 
                     add_dr.save()
-
-            return redirect('/')
+            msg = {}
+            msg['message'] = 'Return report saved successfully.'
+            return render(request, 'reports/returnreports.html', {'message':msg, 'batches': d, 'warhouses':warhouses})
         else:
             return render(request, 'reports/returnreports.html', {'error':'Date, Type and City are required.','batches': d, 'warhouses':warhouses})
 
