@@ -28,6 +28,7 @@ reason_list = ["Address not found","Phone not reachable/switched off","Customer 
 @login_required(login_url="/accounts/login")
 @never_cache
 def instock(request):
+    d = get_updated_data()
     if request.method == 'POST':
         if request.POST['date'] and request.POST['city']:
             for k in d.keys():
@@ -45,15 +46,14 @@ def instock(request):
                     add_ir.save()
             return redirect('/')
         else:
-            d = get_updated_data()
             return render(request, 'reports/instock.html', {'error':'Date and City are required.','batches': d, 'warhouses':warhouses})
     else:
-        d = get_updated_data()
         return render(request, 'reports/instock.html', {'batches': d, 'warhouses':warhouses})
 
 @login_required(login_url="/accounts/login")
 @never_cache
 def delivery(request):
+    d = get_updated_data()
     if request.method == 'POST':
         if request.POST['date'] and request.POST['city'] and request.POST['type']:
             for k in d.keys():
@@ -72,16 +72,15 @@ def delivery(request):
                     add_dr.save()
             return redirect('/')
         else:
-            d = get_updated_data()
             return render(request, 'reports/delivery.html', {'error':'Date, Type and City are required.','batches': d, 'warhouses':warhouses})
     else:
-        d = get_updated_data()
         return render(request, 'reports/delivery.html', {'batches': d, 'warhouses':warhouses})
 
 
 @login_required(login_url="/accounts/login")
 @never_cache
 def notdelivered(request):
+    d = get_updated_data()
     if request.method == 'POST':
         if request.POST['date'] and request.POST['orderid'] and request.POST['reason'] and request.POST['city']:
             for k in d.keys():
@@ -100,15 +99,14 @@ def notdelivered(request):
 
             return redirect('/')
         else:
-            d = get_updated_data()
             return render(request, 'reports/notdelivered.html', {'error':'Date, Order ID, Reason and City are required.','batches': d, 'reasons':reason_list, 'warhouses':warhouses})
     else:
-        d = get_updated_data()
         return render(request, 'reports/notdelivered.html', {'batches': d, 'reasons':reason_list, 'warhouses':warhouses})
 
 @login_required(login_url="/accounts/login")
 @never_cache
 def returnreports(request):
+    d = get_updated_data()
     if request.method == 'POST':
         if request.POST['date'] and request.POST['city'] and request.POST['type']:
             for k in d.keys():
@@ -128,9 +126,7 @@ def returnreports(request):
 
             return redirect('/')
         else:
-            d = get_updated_data()
             return render(request, 'reports/returnreports.html', {'error':'Date, Type and City are required.','batches': d, 'warhouses':warhouses})
 
     else:
-        d = get_updated_data()
         return render(request, 'reports/returnreports.html', {'batches': d, 'warhouses':warhouses})
