@@ -13,6 +13,7 @@ def addbatch(request):
             batch = Batch()
             batch.batch_number = request.POST['batch']
             batch.quantity = request.POST['qnt']
+            batch.current_stock = request.POST['qnt']
             batch.submitted_by = request.user
             batch.productname = Product.objects.get(id=request.POST['product'])
             if request.POST['date']:

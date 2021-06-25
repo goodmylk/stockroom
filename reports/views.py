@@ -2,10 +2,11 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from products.models import Product, Batch
-from warehouse.models import Warehouse
+from warehouse.models import Warehouse, WarehouseStock
 from .models import Instock, Delivery, Notdelivered, Returnreports
 from django.utils import timezone
 from django.views.decorators.cache import never_cache
+from django.db.models import F
 
 #variables
 def get_updated_data():
@@ -44,6 +45,10 @@ def instock(request):
                     	add_ir.comments = request.POST['comments']
 
                     add_ir.save()
+                    obj, created = WarehouseStock.objects.update_or_create(
+                                current_stock=request.POST[f'qnt {k}'],
+                                defaults={'name': Warehouse.objects.get(id= request.POST['city']), 'batch':Batch.objects.get(batch_number= request.POST[f'batch {k}'])},
+                                )
             msg = {}
             msg['message'] = 'Instock report saved successfully.'
             return render(request, 'reports/instock.html', {'message':msg, 'batches': d, 'warhouses':warhouses})
@@ -72,6 +77,8 @@ def delivery(request):
                     	add_dr.comments = request.POST['comments']
 
                     add_dr.save()
+                    Batch.objects.filter(batch_number = request.POST[f'batch {k}']).update(current_stock = F('current_stock') - request.POST[f'qnt {k}'])
+                    WarehouseStock.objects.filter(batch = Batch.objects.get(batch_number=request.POST[f'batch {k}'])).update(current_stock = F('current_stock') - request.POST[f'qnt {k}'])
             msg = {}
             msg['message'] = 'Delivery report saved successfully.'
             return render(request, 'reports/delivery.html', {'message':msg, 'batches': d, 'warhouses':warhouses})
@@ -128,6 +135,8 @@ def returnreports(request):
                     	add_dr.comments = request.POST['comments']
 
                     add_dr.save()
+                    Batch.objects.filter(batch_number = request.POST[f'batch {k}']).update(current_stock = F('current_stock') + request.POST[f'qnt {k}'])
+                    WarehouseStock.objects.filter(batch =  Batch.objects.get(batch_number=request.POST[f'batch {k}'])).update(current_stock = F('current_stock') + request.POST[f'qnt {k}'])
             msg = {}
             msg['message'] = 'Return report saved successfully.'
             return render(request, 'reports/returnreports.html', {'message':msg, 'batches': d, 'warhouses':warhouses})

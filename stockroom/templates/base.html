@@ -2,110 +2,98 @@
 {% load static %}
 <html>
 <head>
-  <!-- Font Awesome -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet"/>
-<!-- Google Fonts -->
-<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet"/>
-<!-- MDB -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.5.0/mdb.min.css" rel="stylesheet"/>
-
-  <nav class="navbar navbar-expand-lg navbar-light " style="background-color:#ffffff;">
-  <!-- Container wrapper -->
-  <div class="container-fluid">
-
-    <a class="navbar-brand mt-2 mt-lg-0" href="/">
-        <h5 style="font-family:Aileron; font-weight: bold; font-size: 1.5em;"> StockRoom </h5>
-    </a>
-
-    <!-- Toggle button -->
-    <button
-      class="navbar-toggler"
-      type="button"
-      data-mdb-toggle="collapse"
-      data-mdb-target="#navbarRightAlignExample"
-      aria-controls="navbarRightAlignExample"
-      aria-expanded="false"
-      aria-label="Toggle navigation"
-    >
-      <i class="fas fa-bars"></i>
-    </button>
-
-    <!-- Collapsible wrapper -->
-    <div class="collapse navbar-collapse" id="navbarRightAlignExample">
-      <!-- Left links -->
-      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-        <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="" style="font-size: 1.25em; font-weight: bold;">Dashboard</a>
-        </li>
-        <!-- Navbar dropdown -->
-        <li class="nav-item dropdown">
-          <a
-            class="nav-link dropdown-toggle active"
-            href="#"
-            id="navbarDropdown"
-            role="button"
-            data-mdb-toggle="dropdown"
-            aria-expanded="false"
-            style="font-size: 1.25em; font-weight: bold;"
-          >
-            Add Report
-          </a>
-          <!-- Dropdown menu -->
-          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <li>
-              <a class="dropdown-item text-center" style="font-size: 1.25em; font-weight: bold;" href="{% url 'delivery' %}">Delivery</a>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>StockRoom</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="all,follow">
+  <!-- Bootstrap CSS-->
+  <link rel="stylesheet" href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}">
+  <!-- Font Awesome CSS-->
+  <link rel="stylesheet" href="{% static 'vendor/font-awesome/css/font-awesome.min.css' %}">
+  <!-- Fontastic Custom icon font-->
+  <link rel="stylesheet" href="{% static 'css/fontastic.css' %}">
+  <!-- Google fonts - Roboto -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700">
+  <!-- Google fonts - overpass -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Overpass+Mono:300,400,600,700|Overpass:100,100i,200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i&subset=latin-ext">
+  <!-- jQuery Circle-->
+  <link rel="stylesheet" href="{% static 'css/grasp_mobile_progress_circle-1.0.0.min.css' %}">
+  <!-- Custom Scrollbar-->
+  <link rel="stylesheet" href="{% static 'vendor/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.css' %}">
+  <!-- theme stylesheet-->
+  <link rel="stylesheet" href="{% static 'css/style.default.css' %}" id="theme-stylesheet">
+  <!-- Custom stylesheet - for your changes-->
+  <link rel="stylesheet" href="{% static 'css/custom.css' %}">
+  <!-- Favicon-->
+  <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}">
+</head>
+    <header class="header">
+      <nav class="navbar">
+        <div class="container-fluid">
+          <div class="navbar-holder d-flex align-items-center justify-content-between">
+            <div class="navbar-header">
+              <a href="{% url 'dashboard' %}" class="navbar-brand">
+                <div class="brand-text d-none d-md-inline-block"><strong class="text" style="text:white;">STOCKROOM</strong></div></a></div>
+            <ul class="nav-menu list-unstyled d-flex flex-md-row align-items-md-center">
+              <!-- Languages dropdown    -->
+              <li class="nav-item dropdown"><a id="languages" rel="nofollow" data-target="#" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="navbar-brand dropdown-toggle">Add Report</a>
+                <ul aria-labelledby="languages" class="dropdown-menu">
+                  <li><a rel="nofollow" href="{% url 'delivery' %}" class="dropdown-item text-center"> <span>Delivery</span></a></li>
+                  <li><hr class="dropdown-divider" /></li>
+                  <li><a rel="nofollow" href="{% url 'returnreports' %}" class="dropdown-item text-center"> <span>Return</span></a></li>
+                  <li><hr class="dropdown-divider" /></li>
+                  <li><a rel="nofollow" href="{% url 'instock' %}" class="dropdown-item text-center"> <span>Instock</span></a></li>
+                  <li><hr class="dropdown-divider" /></li>
+                  <li><a rel="nofollow" href="{% url 'addbatch' %}" class="dropdown-item text-center"> <span>Batch</span></a></li>
+                  <li><hr class="dropdown-divider" /></li>
+                  <li><a rel="nofollow" href="{% url 'notdelivered' %}" class="dropdown-item text-center"> <span>NDR</span></a></li>
+                </ul>
+              </li>
+              <br>
+              <!-- Log out-->
+              <li>
+                <a class="navbar-brand" href="javascript:{document.getElementById('logout').submit()}"  onclick="" tabindex="-1" aria-disabled="true">
+                <form id="logout" method="POST" action="{% url 'logout' %}">
+                  {% csrf_token %}
+                  <input type="hidden" />
+                </form>
+                <i class="fa fa-sign-out"></i>
+                Logout
+              </a>
             </li>
-            <li><hr class="dropdown-divider" /></li>
-            <li>
-              <a class="dropdown-item text-center" style="font-size: 1.25em; font-weight: bold;" href="{% url 'returnreports' %}">Return</a>
-            </li>
-            <li><hr class="dropdown-divider" /></li>
-            <li>
-              <a class="dropdown-item text-center" style="font-size: 1.25em; font-weight: bold;" href="{% url 'instock' %}">Instock</a>
-            </li>
-            <li><hr class="dropdown-divider" /></li>
-            <li>
-              <a class="dropdown-item text-center" style="font-size: 1.25em; font-weight: bold;" href="{% url 'addbatch' %}">Batch</a>
-            </li>
-            <li><hr class="dropdown-divider" /></li>
-            <li>
-              <a class="dropdown-item text-center" style="font-size: 1.25em; font-weight: bold;" href="{% url 'notdelivered' %}">NDR</a>
-            </li>
-            <li><hr class="dropdown-divider" /></li>
-            <li>
-              <a class="dropdown-item text-center" style="font-size: 1.25em; font-weight: bold;" href="#">Other</a>
-            </li>
-          </ul>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="javascript:{document.getElementById('logout').submit()}"  onclick="" tabindex="-1" aria-disabled="true" style="font-size: 1.25em; font-weight: bold;">
-            Logout
-        </a>
-            <form id="logout" method="POST" action="{% url 'logout' %}">
-              {% csrf_token %}
-              <input type="hidden" />
-            </form>
-        </li>
-      </ul>
-      <!-- Left links -->
-    </div>
-    <!-- Collapsible wrapper -->
-  </div>
-  <!-- Container wrapper -->
-</nav>
-
-
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </header>
 
 {% block content %}
 {% endblock %}
 
-<footer class="my-5 pt-5 text-muted text-center text-small">
-  <p class="mb-1">© Veganarke Enteprises Pvt Ltd {% now "Y" %}</p>
+<footer class="my-5 text-muted text-center text-small">
+  <div class="row">
+    <div class="col-sm-12">
+      <p class="mb-1">© Veganarke Enteprises Pvt Ltd {% now "Y" %}</p>
+    </div>
+  <div class="col-sm-12">
+    <p>Design by <a href="https://bootstrapious.com/p/bootstrap-4-dashboard" style="color: grey; text-decoration: none;">Bootstrapious</a></p>
+    <!-- Please do not remove the backlink to us unless you support further theme's development at https://bootstrapious.com/donate. It is part of the license conditions and it helps me to run Bootstrapious. Thank you for understanding :)-->
+  </div>
+  </div>
 </footer>
 
 <!-- MDB -->
-<script
-  type="text/javascript"
-  src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.5.0/mdb.min.js"
-></script>
+<!-- JavaScript files-->
+<script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
+<script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+<script src="{% static 'js/grasp_mobile_progress_circle-1.0.0.min.js' %}"></script>
+<script src="{% static 'vendor/jquery.cookie/jquery.cookie.js' %}"> </script>
+<script src="{% static 'vendor/chart.js/Chart.min.js' %}"></script>
+<script src="{% static 'vendor/jquery-validation/jquery.validate.min.js' %}"></script>
+<script src="{% static 'vendor/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.concat.min.js' %}"></script>
+<script src="{% static 'js/charts-home.js' %}"></script>
+<!-- Main File-->
+<script src="{% static 'js/front.js' %}"></script>
 </html>

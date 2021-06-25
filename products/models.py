@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 
 def get_deleted_user_instance():
     return User.objects.get(username='deleted')
-    
+
 # Create your models here.
 class Product(models.Model):
     productname = models.CharField(max_length=100)
@@ -25,6 +25,8 @@ class Batch(models.Model):
     comments = models.TextField(null=True)
     submitted_by = models.ForeignKey(User, on_delete=models.SET(get_deleted_user_instance))
     is_active = models.BooleanField(default=True)
+    current_stock = models.IntegerField()
+    last_updated = models.DateTimeField(auto_now= True)
 
     def __str__(self):
         return self.batch_number +"_"+ self.productname.productname
