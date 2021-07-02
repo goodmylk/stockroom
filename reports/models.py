@@ -19,7 +19,7 @@ class Returnreports(models.Model):
     submission_date = models.DateTimeField()
 
     def __str__(self):
-        return str(self.delivery_date.strftime('%b %e %Y'))
+        return str(self.delivery_date.strftime('%b %e %Y')) + str(self.warehouse_name.name) + str(self.batch_number.batch_number)
 
 class Notdelivered(models.Model):
 
@@ -48,7 +48,7 @@ class Instock(models.Model):
     submission_date = models.DateTimeField()
 
     def __str__(self):
-        return str(self.delivery_date.strftime('%b %e %Y'))
+        return str(self.delivery_date.strftime('%b %e %Y')) + str(self.warehouse_name.name) + str(self.batch_number.batch_number)
 
 class Delivery(models.Model):
 
@@ -62,4 +62,4 @@ class Delivery(models.Model):
     submission_date = models.DateTimeField()
 
     def __str__(self):
-        return str(self.delivery_date.strftime('%b %e %Y'))
+        return str(self.delivery_date.strftime('%b %e %Y')) + str(self.warehouse_name.name) + str(self.batch_number.batch_number)
