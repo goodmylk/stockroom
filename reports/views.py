@@ -78,7 +78,10 @@ def delivery(request):
 
                     add_dr.save()
                     Batch.objects.filter(batch_number = request.POST[f'batch {k}']).update(current_stock = F('current_stock') - request.POST[f'qnt {k}'])
-                    WarehouseStock.objects.filter(batch = Batch.objects.get(batch_number=request.POST[f'batch {k}'])).update(current_stock = F('current_stock') - request.POST[f'qnt {k}'])
+                    WarehouseStock.objects.filter(batch = Batch.objects.get(batch_number = request.POST[f'batch {k}'])
+                    ).filter(name = Warehouse.objects.get(pk = request.POST['city'])
+                    ).update(current_stock = F('current_stock') - request.POST[f'qnt {k}'])
+
             msg = {}
             msg['message'] = 'Delivery report saved successfully.'
             return render(request, 'reports/delivery.html', {'message':msg, 'batches': d, 'warhouses':warhouses})
@@ -136,7 +139,10 @@ def returnreports(request):
 
                     add_dr.save()
                     Batch.objects.filter(batch_number = request.POST[f'batch {k}']).update(current_stock = F('current_stock') + request.POST[f'qnt {k}'])
-                    WarehouseStock.objects.filter(batch =  Batch.objects.get(batch_number=request.POST[f'batch {k}'])).update(current_stock = F('current_stock') + request.POST[f'qnt {k}'])
+                    WarehouseStock.objects.filter(batch =  Batch.objects.get(batch_number=request.POST[f'batch {k}'])
+                    ).filter(name = Warehouse.objects.get(pk = request.POST['city'])
+                    ).update(current_stock = F('current_stock') + request.POST[f'qnt {k}'])
+                    
             msg = {}
             msg['message'] = 'Return report saved successfully.'
             return render(request, 'reports/returnreports.html', {'message':msg, 'batches': d, 'warhouses':warhouses})
