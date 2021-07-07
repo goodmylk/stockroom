@@ -15,6 +15,7 @@ class WarehouseStock(models.Model):
     batch = models.ForeignKey('products.Batch', on_delete=models.CASCADE)
     current_stock = models.IntegerField()
     last_updated = models.DateTimeField(auto_now= True)
+    is_active = models.BooleanField(default=True)
 
     def __str__(self):
         return self.name.name + "_" +self.batch.batch_number

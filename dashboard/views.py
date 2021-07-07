@@ -7,9 +7,11 @@ from warehouse.models import Warehouse, WarehouseStock
 # Create your views here.
 @login_required(login_url="/accounts/login")
 def home(request):
+    warehousestocks = WarehouseStock.objects.filter(is_active = True)
     if request.method == 'POST':
         if request.POST['city'] == "Overall":
             batch = (Batch.objects
+            .filter(is_active = True)
             .values('productname')
             .annotate(dcount=Sum('current_stock'),  max_date=Max('last_updated'))
             .order_by('productname')
@@ -21,7 +23,7 @@ def home(request):
             for l in batch:
                  name = Product.objects.get(pk=l['productname'])
                  l['name'] = name
-            return render(request, 'home/dashboard.html', {'batches': batch, 'warehouses':wh})
+            return render(request, 'home/dashboard.html', {'batches': batch, 'warehouses':wh, 'warehousestocks':warehousestocks})
         else:
             warehouse = Warehouse.objects
 
@@ -31,6 +33,7 @@ def home(request):
                     wh.append(x)
 
             batch = (WarehouseStock.objects
+            .filter(is_active = True)
             .filter(name = Warehouse.objects.get(name = request.POST['city']))
             .values('batch__productname')
             .annotate(dcount=Sum('current_stock'),  max_date=Max('last_updated'))
@@ -41,10 +44,11 @@ def home(request):
                  name = Product.objects.get(pk=l["batch__productname"])
                  l['name'] = name
 
-            return render(request, 'home/dashboard.html', {'warehouses':wh, 'batches': batch})
+            return render(request, 'home/dashboard.html', {'warehouses':wh, 'batches': batch, 'warehousestocks':warehousestocks})
 
     else:
         batch = (Batch.objects
+        .filter(is_active = True)
         .values('productname')
         .annotate(dcount=Sum('current_stock'),  max_date=Max('last_updated'))
         .order_by('productname')
@@ -56,4 +60,4 @@ def home(request):
         for l in batch:
              name = Product.objects.get(pk=l['productname'])
              l['name'] = name
-        return render(request, 'home/dashboard.html', {'batches': batch, 'warehouses':wh})
+        return render(request, 'home/dashboard.html', {'batches': batch, 'warehouses':wh, 'warehousestocks':warehousestocks})

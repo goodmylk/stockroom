@@ -8,10 +8,10 @@
     <section class="dashboard-counts pt-2" style='background-color: rgb(240, 245, 245);'>
       <div class="container-fluid pt-3">
         <div class="row">
-          <div class="col-lg-9 col-md-12">
+          <div class="col-lg-8 col-md-12">
             <h1 style="font-family: Overpass;">CURRENT STOCK</h1>
           </div>
-            <h3 style="font-family: Overpass; margin-top: 0.5em;">Select City</h3>
+            <h4 style="font-family: Overpass; margin-top: 0.5em;">Select Warehouse</h4>
           <div class="col-lg-2 col-md-12">
             <a class="navbar-brand" href="#"  onclick="" tabindex="-1" aria-disabled="true">
               <form id="cityform" method="POST" action="{% url 'dashboard' %}">
@@ -47,6 +47,48 @@
         </div>
       </div>
     </section>
+    <div class = 'container-fluid pt-4'>
+      <h2 style="font-family: Overpass;">BATCH WISE STOCK</h2>
+      <div class="row d-flex pt-2">
+      {% for warehouse in warehouses %}
+        {% if warehouse != "Overall" %}
+          <div class="col-lg-6 col-md-12">
+          <div class="card bg-light text-center" style = "box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);">
+            <div class="card-header" style="background: rgb(194,214,214)">
+              <p class="text-uppercase" style="font-family: Overpass;">{{ warehouse }}</p>
+            </div>
+            <div class="card-body" style="background:rgb(240,245,245);">
+              <div class="table-responsive">
+                <table class="table table-hover">
+                  <thead>
+                    <tr>
+                      <th class="text-uppercase">Product</th>
+                      <th class="text-uppercase">Batch Number</th>
+                      <th class="text-uppercase">Current stock</th>
+                      <th class="text-uppercase">Last Updated</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for warehousestock in warehousestocks.all %}
+                    {% if warehousestock.name.name == warehouse %}
+                    <tr>
+                      <td>{{ warehousestock.batch.productname.productname}}</td>
+                      <td>{{ warehousestock.batch.batch_number }}</td>
+                      <td>{{ warehousestock.current_stock }}</td>
+                      <td>{{ warehousestock.last_updated|date:'Y-m-d' }}</td>
+                    </tr>
+                    {% endif %}
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endif %}
+      {% endfor %}
+      </div>
+    </div>
 <script type="text/javascript">
   var city = document.getElementById("city");
   city.onchange = function(){

@@ -13,9 +13,6 @@ class Product(models.Model):
     def __str__(self):
         return self.productname
 
-    def active_products(self):
-        if self.is_active:
-            return self.name
 
 class Batch(models.Model):
     batch_number = models.CharField(max_length = 50)

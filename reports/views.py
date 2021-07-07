@@ -12,7 +12,7 @@ from django.db.models import F
 def get_updated_data():
     d = {}
     pr = Product.objects
-    bt = Batch.objects
+    bt = Batch.objects.filter(is_active = True)
     for x in list(pr.values_list('id', flat=True)):
         name = list(pr.values_list('productname', flat=True).filter(pk = x))
         y = list(bt.values_list('batch_number', flat=True).filter(productname = x))
@@ -49,6 +49,13 @@ def instock(request):
                                 current_stock=request.POST[f'qnt {k}'],
                                 defaults={'name': Warehouse.objects.get(id= request.POST['city']), 'batch':Batch.objects.get(batch_number= request.POST[f'batch {k}'])},
                                 )
+
+                    ws = WarehouseStock.objects.filter(batch = Batch.objects.get(batch_number = request.POST[f'batch {k}'])
+                    ).get(name = Warehouse.objects.get(pk = request.POST['city'])).current_stock
+                    if ws > 0:
+                        WarehouseStock.objects.filter(batch = Batch.objects.get(batch_number = request.POST[f'batch {k}'])
+                        ).filter(name = Warehouse.objects.get(pk = request.POST['city'])).update(is_active = True)
+                        
             msg = {}
             msg['message'] = 'Instock report saved successfully.'
             return render(request, 'reports/instock.html', {'message':msg, 'batches': d, 'warhouses':warhouses})
@@ -78,9 +85,19 @@ def delivery(request):
 
                     add_dr.save()
                     Batch.objects.filter(batch_number = request.POST[f'batch {k}']).update(current_stock = F('current_stock') - request.POST[f'qnt {k}'])
+                    cs = Batch.objects.get(batch_number = request.POST[f'batch {k}']).current_stock
+                    if cs <= 0:
+                        Batch.objects.filter(batch_number = request.POST[f'batch {k}']).update(is_active = False)
+
                     WarehouseStock.objects.filter(batch = Batch.objects.get(batch_number = request.POST[f'batch {k}'])
                     ).filter(name = Warehouse.objects.get(pk = request.POST['city'])
                     ).update(current_stock = F('current_stock') - request.POST[f'qnt {k}'])
+
+                    ws = WarehouseStock.objects.filter(batch = Batch.objects.get(batch_number = request.POST[f'batch {k}'])
+                    ).get(name = Warehouse.objects.get(pk = request.POST['city'])).current_stock
+                    if ws <= 0:
+                        WarehouseStock.objects.filter(batch = Batch.objects.get(batch_number = request.POST[f'batch {k}'])
+                        ).filter(name = Warehouse.objects.get(pk = request.POST['city'])).update(is_active = False)
 
             msg = {}
             msg['message'] = 'Delivery report saved successfully.'
@@ -139,10 +156,20 @@ def returnreports(request):
 
                     add_dr.save()
                     Batch.objects.filter(batch_number = request.POST[f'batch {k}']).update(current_stock = F('current_stock') + request.POST[f'qnt {k}'])
+                    cs = Batch.objects.get(batch_number = request.POST[f'batch {k}']).current_stock
+                    if cs > 0:
+                        Batch.objects.filter(batch_number = request.POST[f'batch {k}']).update(is_active = True)
+
                     WarehouseStock.objects.filter(batch =  Batch.objects.get(batch_number=request.POST[f'batch {k}'])
                     ).filter(name = Warehouse.objects.get(pk = request.POST['city'])
                     ).update(current_stock = F('current_stock') + request.POST[f'qnt {k}'])
-                    
+
+                    ws = WarehouseStock.objects.filter(batch = Batch.objects.get(batch_number = request.POST[f'batch {k}'])
+                    ).get(name = Warehouse.objects.get(pk = request.POST['city'])).current_stock
+                    if ws > 0:
+                        WarehouseStock.objects.filter(batch = Batch.objects.get(batch_number = request.POST[f'batch {k}'])
+                        ).filter(name = Warehouse.objects.get(pk = request.POST['city'])).update(is_active = True)
+
             msg = {}
             msg['message'] = 'Return report saved successfully.'
             return render(request, 'reports/returnreports.html', {'message':msg, 'batches': d, 'warhouses':warhouses})
