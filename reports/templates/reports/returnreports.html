@@ -4,7 +4,7 @@
 
 
 <div class="container" style="width: 60%;">
-  <form method="POST" action="{% url 'returnreports' %}" >
+  <form method="POST" action="{% url 'returnreports' %}" enctype="multipart/form-data">
     {% csrf_token %}
     <div class="py-5 text-center">
       <h2 class="display-5">Add Return Report</h2>
@@ -17,6 +17,11 @@
     {% if message %}
     <ul>
   	   <h6 style="color:green;">{{ message.message }}</h6>
+    </ul>
+    {% endif %}
+    {% if message1 %}
+    <ul>
+  	   <h6 style="color:red;">{{ message1.message }}</h6>
     </ul>
     {% endif %}
     <div class="container pt-2">
@@ -45,39 +50,18 @@
         </div>
         </div>
       </div>
-      {% for key, values in batches.items %}
-      <div class="row justify-content-between pt-4">
-        <div class="col-md-4">
-          <h5 class="mb-3">{{ key }}</h5>
-        </div>
-        <div class="col-md-4">
-          <label for="product">Select Batch</label>
-          <select class="custom-select d-block w-100" id="topic" name= "batch {{ key }}">
-            <option value="" selected="selected">Select Batch</option>
-            {% for v in values %}
-            <option value="{{v}}">{{ v }}</option>
-            {% endfor %}
-          </select>
-        </div>
-        <div class="col-md-4">
-          <label for="qnt">Quantity</label>
-          <input type="text" class="form-control" id="qnt" placeholder="Quantity" name='qnt {{ key }}'>
-        </div>
-      </div>
-      {% endfor %}
       <div class="container pt-3">
         <div class="row justify-content-between">
-          <h3 class="mb-3">Comments</h3>
-          <div class="col-md-6">
-            <textarea class="form-control" rows="3" id="comments" name='comments'></textarea>
+          <div class="col-md-5 ">
+            <label for="file1"> Upload File</label>
+            <input type="file" id="file1" name="file">
+            <small>Only accepts CSV files</small>
           </div>
-          <div class="col-md-4 ">
-            <button class="btn btn-primary btn-lg btn-block" type="submit">Submit</button>
+          <div class="col-md-5 ">
+            <button class="btn btn-primary btn-block" type="submit">Submit</button>
           </div>
         </div>
       </div>
-    </div>
     </form>
   </div>
-
 {% endblock %}

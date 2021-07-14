@@ -8,15 +8,13 @@ def get_deleted_user_instance():
     return User.objects.get(username='deleted')
 
 class Returnreports(models.Model):
-
     delivery_date = models.DateTimeField()
     quantity = models.IntegerField()
     batch_number = models.ForeignKey('products.Batch', on_delete=models.CASCADE)
     warehouse_name = models.ForeignKey('warehouse.Warehouse', on_delete=models.CASCADE)
-    comments = models.TextField(null=True)
     submitted_by = models.ForeignKey(User, on_delete=models.SET(get_deleted_user_instance))
     type = models.CharField(max_length = 10)
-    submission_date = models.DateTimeField()
+    submission_date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return str(self.delivery_date.strftime('%b %e %Y')) + str(self.warehouse_name.name) + str(self.batch_number.batch_number)
@@ -29,7 +27,6 @@ class Notdelivered(models.Model):
     reason = models.CharField(max_length = 50)
     batch_number = models.ForeignKey('products.Batch', on_delete=models.CASCADE)
     warehouse_name = models.ForeignKey('warehouse.Warehouse', on_delete=models.CASCADE)
-    comments = models.TextField(null=True)
     submitted_by = models.ForeignKey(User, on_delete=models.SET(get_deleted_user_instance))
     is_active = models.BooleanField(default=True)
 
@@ -43,9 +40,8 @@ class Instock(models.Model):
     quantity = models.IntegerField()
     batch_number = models.ForeignKey('products.Batch', on_delete=models.CASCADE)
     warehouse_name = models.ForeignKey('warehouse.Warehouse', on_delete=models.CASCADE)
-    comments = models.TextField(null=True)
     submitted_by = models.ForeignKey(User, on_delete=models.SET(get_deleted_user_instance))
-    submission_date = models.DateTimeField()
+    submission_date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return str(self.delivery_date.strftime('%b %e %Y')) + str(self.warehouse_name.name) + str(self.batch_number.batch_number)
@@ -56,10 +52,9 @@ class Delivery(models.Model):
     quantity = models.IntegerField()
     batch_number = models.ForeignKey('products.Batch', on_delete=models.CASCADE)
     warehouse_name = models.ForeignKey('warehouse.Warehouse', on_delete=models.CASCADE)
-    comments = models.TextField(null=True)
     submitted_by = models.ForeignKey(User, on_delete=models.SET(get_deleted_user_instance))
     type = models.CharField(max_length = 10)
-    submission_date = models.DateTimeField()
+    submission_date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return str(self.delivery_date.strftime('%b %e %Y')) + str(self.warehouse_name.name) + str(self.batch_number.batch_number)
