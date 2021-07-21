@@ -37,7 +37,7 @@ def instock(request):
             msg = {}
             err = []
             for column in csv.reader(io_string, delimiter=',', quotechar="|"):
-                bch = column[1]
+                bch = column[1].replace(' ', '')
                 qnt = column[2]
                 if int(qnt) > 0:
                     try:
@@ -111,15 +111,10 @@ def delivery(request):
             not_added = []
             msg = {}
             for column in csv.reader(io_string, delimiter=',', quotechar="|"):
-                bch = column[1]
+                bch = column[1].replace(' ', '')
                 qnt = column[2]
                 if int(qnt) > 0:
                     if Batch.objects.filter(batch_number = bch).exists() and WarehouseStock.objects.filter(batch =  Batch.objects.get(batch_number=bch)).filter(name = Warehouse.objects.get(pk = ct)).exists():
-                        
-                        Batch.objects.filter(batch_number = bch).update(current_stock = F('current_stock') - qnt)
-                        cs = Batch.objects.get(batch_number = bch).current_stock
-                        if cs <= 0:
-                            Batch.objects.filter(batch_number = bch).update(is_active = False)
 
                         WarehouseStock.objects.filter(batch = Batch.objects.get(batch_number = bch)
                         ).filter(name = Warehouse.objects.get(pk = ct)
@@ -187,7 +182,7 @@ def notdelivered(request):
             msg = {}
 
             for column in csv.reader(io_string, delimiter=',', quotechar="|"):
-                bch = column[1]
+                bch = column[1].replace(' ', '')
                 qnt = column[2]
                 reason = column[3]
                 order_id = column[4]
@@ -250,15 +245,11 @@ def returnreports(request):
             msg = {}
 
             for column in csv.reader(io_string, delimiter=',', quotechar="|"):
-                bch = column[1]
+                bch = column[1].replace(' ', '')
                 qnt = column[2]
 
                 if int(qnt) > 0:
                     if Batch.objects.filter(batch_number = bch).exists() and WarehouseStock.objects.filter(batch =  Batch.objects.get(batch_number=bch)).filter(name = Warehouse.objects.get(pk = ct)).exists():
-                        Batch.objects.filter(batch_number = bch).update(current_stock = F('current_stock') + qnt)
-                        cs = Batch.objects.get(batch_number = bch).current_stock
-                        if cs > 0:
-                            Batch.objects.filter(batch_number = bch).update(is_active = True)
 
                         WarehouseStock.objects.filter(batch =  Batch.objects.get(batch_number=bch)
                         ).filter(name = Warehouse.objects.get(pk = ct)

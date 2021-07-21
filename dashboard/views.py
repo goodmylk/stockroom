@@ -10,18 +10,20 @@ def home(request):
     warehousestocks = WarehouseStock.objects.filter(is_active = True)
     if request.method == 'POST':
         if request.POST['city'] == "Overall":
-            batch = (Batch.objects
+
+            batch = (WarehouseStock.objects
             .filter(is_active = True)
-            .values('productname')
+            .values('batch__productname')
             .annotate(dcount=Sum('current_stock'),  max_date=Max('last_updated'))
-            .order_by('productname')
+            .order_by()
             )
+
             warehouse = Warehouse.objects
             wh = ["Overall"]
             for x in list(warehouse.values_list('name', flat=True)):
                 wh.append(x)
             for l in batch:
-                 name = Product.objects.get(pk=l['productname'])
+                 name = Product.objects.get(pk=l['batch__productname'])
                  l['name'] = name
             return render(request, 'home/dashboard.html', {'batches': batch, 'warehouses':wh, 'warehousestocks':warehousestocks})
         else:
@@ -47,17 +49,17 @@ def home(request):
             return render(request, 'home/dashboard.html', {'warehouses':wh, 'batches': batch, 'warehousestocks':warehousestocks})
 
     else:
-        batch = (Batch.objects
+        batch = (WarehouseStock.objects
         .filter(is_active = True)
-        .values('productname')
+        .values('batch__productname')
         .annotate(dcount=Sum('current_stock'),  max_date=Max('last_updated'))
-        .order_by('productname')
+        .order_by()
         )
         warehouse = Warehouse.objects
         wh = ["Overall"]
         for x in list(warehouse.values_list('name', flat=True)):
             wh.append(x)
         for l in batch:
-             name = Product.objects.get(pk=l['productname'])
+             name = Product.objects.get(pk=l['batch__productname'])
              l['name'] = name
         return render(request, 'home/dashboard.html', {'batches': batch, 'warehouses':wh, 'warehousestocks':warehousestocks})

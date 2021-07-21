@@ -22,8 +22,6 @@ class Batch(models.Model):
     comments = models.TextField(null=True)
     submitted_by = models.ForeignKey(User, on_delete=models.SET(get_deleted_user_instance))
     is_active = models.BooleanField(default=True)
-    current_stock = models.IntegerField()
-    last_updated = models.DateTimeField(auto_now= True)
 
     def __str__(self):
         return self.batch_number +"_"+ self.productname.productname
