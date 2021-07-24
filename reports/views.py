@@ -113,28 +113,31 @@ def delivery(request):
             for column in csv.reader(io_string, delimiter=',', quotechar="|"):
                 bch = column[1].replace(' ', '')
                 qnt = column[2]
-                if int(qnt) > 0:
-                    if Batch.objects.filter(batch_number = bch).exists() and WarehouseStock.objects.filter(batch =  Batch.objects.get(batch_number=bch)).filter(name = Warehouse.objects.get(pk = ct)).exists():
+                if qnt != '':
+                    if int(qnt) > 0:
+                        if Batch.objects.filter(batch_number = bch).exists() and WarehouseStock.objects.filter(batch =  Batch.objects.get(batch_number=bch)).filter(name = Warehouse.objects.get(pk = ct)).exists():
 
-                        WarehouseStock.objects.filter(batch = Batch.objects.get(batch_number = bch)
-                        ).filter(name = Warehouse.objects.get(pk = ct)
-                        ).update(current_stock = F('current_stock') - qnt)
-
-                        ws = WarehouseStock.objects.filter(batch = Batch.objects.get(batch_number = bch)
-                        ).get(name = Warehouse.objects.get(pk = ct)).current_stock
-                        if ws <= 0:
                             WarehouseStock.objects.filter(batch = Batch.objects.get(batch_number = bch)
-                            ).filter(name = Warehouse.objects.get(pk = ct)).update(is_active = False)
+                            ).filter(name = Warehouse.objects.get(pk = ct)
+                            ).update(current_stock = F('current_stock') - qnt)
 
-                        dl = Delivery()
-                        dl.delivery_date = dt
-                        dl.quantity = qnt
-                        dl.batch_number = Batch.objects.get(batch_number = bch)
-                        dl.warehouse_name = Warehouse.objects.get(id= ct)
-                        dl.submitted_by = request.user
-                        dl.type = type
-                        dl.save()
+                            ws = WarehouseStock.objects.filter(batch = Batch.objects.get(batch_number = bch)
+                            ).get(name = Warehouse.objects.get(pk = ct)).current_stock
+                            if ws <= 0:
+                                WarehouseStock.objects.filter(batch = Batch.objects.get(batch_number = bch)
+                                ).filter(name = Warehouse.objects.get(pk = ct)).update(is_active = False)
 
+                            dl = Delivery()
+                            dl.delivery_date = dt
+                            dl.quantity = qnt
+                            dl.batch_number = Batch.objects.get(batch_number = bch)
+                            dl.warehouse_name = Warehouse.objects.get(id= ct)
+                            dl.submitted_by = request.user
+                            dl.type = type
+                            dl.save()
+
+                        else:
+                            not_added.append(column[1])
                     else:
                         not_added.append(column[1])
 
