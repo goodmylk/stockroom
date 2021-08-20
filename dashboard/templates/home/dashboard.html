@@ -34,7 +34,6 @@
               <div class="name">
                 <a href="#">
                 <strong class="text-uppercase">{{ batch.name}}</strong></a>
-                <span>Last updated {{ batch.max_date|date:'Y-m-d'}}</span>
                 {% if batch.dcount < 30 %}
                   <div class="count-number red" style="color: rgb(255,0,0)">{{ batch.dcount }}</div>
                 {% else %}
@@ -42,6 +41,13 @@
                 {% endif %}
               </div>
             </div>
+          </div>
+          {% endfor %}
+        </div>
+        <div class="row pt-3">
+          {% for up in update %}
+          <div class="col-xl-2 col-md-4 col-5 pt-3">
+            <span class="text-uppercase">{{ up.warehouse_name__name }}: {{up.dcount|date:"d/m/y"}}</span>
           </div>
           {% endfor %}
         </div>
@@ -65,7 +71,6 @@
                       <th class="text-uppercase">Product</th>
                       <th class="text-uppercase">Batch Number</th>
                       <th class="text-uppercase">Current stock</th>
-                      <th class="text-uppercase">Last Updated</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -75,7 +80,6 @@
                       <td>{{ warehousestock.batch.productname.productname}}</td>
                       <td>{{ warehousestock.batch.batch_number }}</td>
                       <td>{{ warehousestock.current_stock }}</td>
-                      <td>{{ warehousestock.last_updated|date:'Y-m-d' }}</td>
                     </tr>
                     {% endif %}
                     {% endfor %}
