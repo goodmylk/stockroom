@@ -37,7 +37,17 @@
               <a href="{% url 'dashboard' %}" class="navbar-brand">
                 <div class="brand-text d-none d-md-inline-block"><strong class="text" style="text:white;">STOCKROOM</strong></div></a></div>
             <ul class="nav-menu list-unstyled d-flex flex-md-row align-items-md-center">
-              <!-- Languages dropdown    -->
+              <!-- Order Processing dropdown    -->
+              <li class="nav-item dropdown"><a id="languages" rel="nofollow" data-target="#" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="navbar-brand dropdown-toggle">Order Processing</a>
+                <ul aria-labelledby="languages" class="dropdown-menu">
+                  <li><a rel="nofollow" href="{% url 'bengaluru' %}" class="dropdown-item text-center"> <span>Bengaluru</span></a></li>
+                  <li><hr class="dropdown-divider" /></li>
+                  <li><a rel="nofollow" href="" class="dropdown-item text-center"> <span>Nation Wide</span></a></li>
+                  <li><hr class="dropdown-divider" /></li>
+                  <li><a rel="nofollow" href="" class="dropdown-item text-center"> <span>Amazon</span></a></li>
+                </ul>
+              </li>
+              <!-- Reports dropdown    -->
               <li class="nav-item dropdown"><a id="languages" rel="nofollow" data-target="#" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="navbar-brand dropdown-toggle">Add Report</a>
                 <ul aria-labelledby="languages" class="dropdown-menu">
                   <li><a rel="nofollow" href="{% url 'delivery' %}" class="dropdown-item text-center"> <span>Delivery</span></a></li>

@@ -37,39 +37,40 @@ def instock(request):
             msg = {}
             err = []
             for column in csv.reader(io_string, delimiter=',', quotechar="|"):
-                bch = column[1].replace(' ', '')
+                bch = column[1].replace(' ', '').upper()
                 qnt = column[2]
-                if int(qnt) > 0:
-                    try:
-                        obj, created = WarehouseStock.objects.get_or_create(
-                            name = Warehouse.objects.get(id= ct),
-                            batch = Batch.objects.get(batch_number= bch),
-                            defaults={"current_stock": qnt},
-                            )
+                if str(qnt) != '':
+                    if (float(qnt) > 0):
+                        try:
+                            obj, created = WarehouseStock.objects.get_or_create(
+                                name = Warehouse.objects.get(id= ct),
+                                batch = Batch.objects.get(batch_number= bch),
+                                defaults={"current_stock": qnt},
+                                )
 
-                        if not created:
-                            WarehouseStock.objects.filter(name = Warehouse.objects.get(id= ct),
-                            batch = Batch.objects.get(batch_number= bch)).update(current_stock=F("current_stock") + qnt)
+                            if not created:
+                                WarehouseStock.objects.filter(name = Warehouse.objects.get(id= ct),
+                                batch = Batch.objects.get(batch_number= bch)).update(current_stock=F("current_stock") + qnt)
 
 
-                            ws = WarehouseStock.objects.filter(batch = Batch.objects.get(batch_number = bch)
-                            ).get(name = Warehouse.objects.get(pk = ct)).current_stock
+                                ws = WarehouseStock.objects.filter(batch = Batch.objects.get(batch_number = bch)
+                                ).get(name = Warehouse.objects.get(pk = ct)).current_stock
 
-                            if ws > 0:
-                                WarehouseStock.objects.filter(batch = Batch.objects.get(batch_number = bch)
-                                ).filter(name = Warehouse.objects.get(pk = ct)).update(is_active = True)
+                                if ws > 0:
+                                    WarehouseStock.objects.filter(batch = Batch.objects.get(batch_number = bch)
+                                    ).filter(name = Warehouse.objects.get(pk = ct)).update(is_active = True)
 
-                        add_ir = Instock()
-                        add_ir.delivery_date = dt
-                        add_ir.warehouse_name = Warehouse.objects.get(id= ct)
-                        add_ir.submitted_by = request.user
-                        add_ir.batch_number = Batch.objects.get(batch_number= bch)
-                        add_ir.quantity = qnt
-                        add_ir.save()
+                            add_ir = Instock()
+                            add_ir.delivery_date = dt
+                            add_ir.warehouse_name = Warehouse.objects.get(id= ct)
+                            add_ir.submitted_by = request.user
+                            add_ir.batch_number = Batch.objects.get(batch_number= bch)
+                            add_ir.quantity = qnt
+                            add_ir.save()
 
-                    except Exception as e:
-                        not_added.append(column[1])
-                        err.append(e)
+                        except Exception as e:
+                            not_added.append(column[1])
+                            err.append(e)
 
             if len(not_added) > 0:
                 if len(not_added) == 1:
@@ -111,10 +112,10 @@ def delivery(request):
             not_added = []
             msg = {}
             for column in csv.reader(io_string, delimiter=',', quotechar="|"):
-                bch = column[1].replace(' ', '')
+                bch = column[1].replace(' ', '').upper()
                 qnt = column[2]
-                if qnt != '':
-                    if int(qnt) > 0:
+                if str(qnt) != '':
+                    if float(qnt) > 0:
                         if Batch.objects.filter(batch_number = bch).exists() and WarehouseStock.objects.filter(batch =  Batch.objects.get(batch_number=bch)).filter(name = Warehouse.objects.get(pk = ct)).exists():
 
                             WarehouseStock.objects.filter(batch = Batch.objects.get(batch_number = bch)
@@ -138,8 +139,6 @@ def delivery(request):
 
                         else:
                             not_added.append(column[1])
-                    else:
-                        not_added.append(column[1])
 
             if len(not_added) > 0:
                 if len(not_added) == 1:
