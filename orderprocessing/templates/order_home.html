@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% load static %}
+
+<br><br><br><br><br><br><br>
+<div class="container" style="width: 15%;">
+  {% if error %}
+  {{ error }}
+  <br />
+  <br />
+  {% endif %}
+
+  <form method="POST" action="{% url 'bengaluru' %}">
+  {% csrf_token %}
+  <h4 style="color: black;">Last Order ID:</h4>
+  <input type="text" name="last_order_id" />
+  <br /><br />
+  <input class="btn btn-outline-dark btn-rounded" type="submit" value="Submit" style="color: black;"/>
+  </form>
+</div>
+
+{% endblock %}

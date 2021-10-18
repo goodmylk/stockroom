@@ -26,30 +26,17 @@
     {% endif %}
     <div class="container pt-2">
       <div class="row justify-content-between">
-        <div class="col-md-4">
+        <div class="col-md-5">
           <label for="manufacturedate">Delivery Date</label>
           <input type="datetime-local" class="form-control" id="date" name='date' placeholder="Date">
         </div>
-        <div class="col-md-4">
+        <div class="col-md-5">
           <label for="city">Select Warehouse</label>
           <select class="d-block w-100 " id="city" name='city'>
             <option value="" selected="selected">Select Warehouse</option>
             {% for warhouse in warhouses.all %}
             <option value="{{warhouse.id}}">{{ warhouse.name }}</option>
             {% endfor %}
-          </select>
-        </div>
-        <div class="col-md-3">
-          <label for="reason">Select Type</label>
-          <select class="d-block w-100 " id="reason" name='type'>
-            <option value="" selected="selected">Select Type</option>
-            <option value="B2B">B2B</option>
-            <option value="B2C">B2C</option>
-            <option value="NW">NW</option>
-            <option value="AMAZON">AMAZON</option>
-            <option value="WASTAGE">WASTAGE</option>
-            <option value="SAMPLE">SAMPLE</option>
-            <option value="ST">STOCK TRANSFER</option>
           </select>
         </div>
         </div>

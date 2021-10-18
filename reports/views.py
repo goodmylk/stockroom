@@ -11,7 +11,7 @@ from django.db.models import F
 
 #variables
 warhouses = Warehouse.objects
-
+delivery_type = ['Product', 'Batch Number', 'B2B','B2C', 'NW','AMAZON','WASTAGE','ST','SAMPLE']
 #Views
 @login_required(login_url="/accounts/login")
 def instock(request):
@@ -93,8 +93,7 @@ def delivery(request):
     if request.method == 'POST':
         ct = request.POST['city']
         dt = request.POST['date']
-        type = request.POST['type']
-        if dt and ct and type:
+        if dt and ct:
 
             if request.method == "GET":
                 return render(request, 'reports/delivery.html', {'warhouses':warhouses})
@@ -113,32 +112,34 @@ def delivery(request):
             msg = {}
             for column in csv.reader(io_string, delimiter=',', quotechar="|"):
                 bch = column[1].replace(' ', '').upper()
-                qnt = column[2]
-                if str(qnt) != '':
-                    if float(qnt) > 0:
-                        if Batch.objects.filter(batch_number = bch).exists() and WarehouseStock.objects.filter(batch =  Batch.objects.get(batch_number=bch)).filter(name = Warehouse.objects.get(pk = ct)).exists():
+                for i in range(2, 9):
+                    qnt = column[i]
+                    type = delivery_type[i]
+                    if str(qnt) != '':
+                        if float(qnt) > 0:
+                            if Batch.objects.filter(batch_number = bch).exists() and WarehouseStock.objects.filter(batch =  Batch.objects.get(batch_number=bch)).filter(name = Warehouse.objects.get(pk = ct)).exists():
 
-                            WarehouseStock.objects.filter(batch = Batch.objects.get(batch_number = bch)
-                            ).filter(name = Warehouse.objects.get(pk = ct)
-                            ).update(current_stock = F('current_stock') - qnt)
-
-                            ws = WarehouseStock.objects.filter(batch = Batch.objects.get(batch_number = bch)
-                            ).get(name = Warehouse.objects.get(pk = ct)).current_stock
-                            if ws <= 0:
                                 WarehouseStock.objects.filter(batch = Batch.objects.get(batch_number = bch)
-                                ).filter(name = Warehouse.objects.get(pk = ct)).update(is_active = False)
+                                ).filter(name = Warehouse.objects.get(pk = ct)
+                                ).update(current_stock = F('current_stock') - qnt)
 
-                            dl = Delivery()
-                            dl.delivery_date = dt
-                            dl.quantity = qnt
-                            dl.batch_number = Batch.objects.get(batch_number = bch)
-                            dl.warehouse_name = Warehouse.objects.get(id= ct)
-                            dl.submitted_by = request.user
-                            dl.type = type
-                            dl.save()
+                                ws = WarehouseStock.objects.filter(batch = Batch.objects.get(batch_number = bch)
+                                ).get(name = Warehouse.objects.get(pk = ct)).current_stock
+                                if ws <= 0:
+                                    WarehouseStock.objects.filter(batch = Batch.objects.get(batch_number = bch)
+                                    ).filter(name = Warehouse.objects.get(pk = ct)).update(is_active = False)
 
-                        else:
-                            not_added.append(column[1])
+                                dl = Delivery()
+                                dl.delivery_date = dt
+                                dl.quantity = qnt
+                                dl.batch_number = Batch.objects.get(batch_number = bch)
+                                dl.warehouse_name = Warehouse.objects.get(id= ct)
+                                dl.submitted_by = request.user
+                                dl.type = type
+                                dl.save()
+
+                            else:
+                                not_added.append(column[1]+"_"+type)
 
             if len(not_added) > 0:
                 if len(not_added) == 1:
