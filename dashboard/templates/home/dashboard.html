@@ -70,6 +70,7 @@
                     <tr>
                       <th class="text-uppercase">Product</th>
                       <th class="text-uppercase">Batch Number</th>
+                      <th class="text-uppercase">MFD</th>
                       <th class="text-uppercase">Current stock</th>
                     </tr>
                   </thead>
@@ -79,6 +80,7 @@
                     <tr>
                       <td>{{ warehousestock.batch.productname.productname}}</td>
                       <td>{{ warehousestock.batch.batch_number }}</td>
+                      <td>{{ warehousestock.batch.manufacture_date | date:'d-m-y' }}</td>
                       <td>{{ warehousestock.current_stock }}</td>
                     </tr>
                     {% endif %}
