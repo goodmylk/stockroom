@@ -23,6 +23,7 @@ SHOPIFY_API_SECRET = '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'
 
 INSTALLED_APPS = [
     'orderprocessing.apps.OrderprocessingConfig',
+    'slackbot.apps.SlackbotConfig',
     'shopify_app.apps.ShopifyAppConfig',
     'accounts.apps.AccountsConfig',
     'products.apps.ProductsConfig',
@@ -61,6 +62,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'warehouse.context_processors.all_warehouse',
             ],
         },
     },
@@ -107,7 +109,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE =  'Asia/Kolkata'
 
 USE_I18N = True
 
@@ -129,6 +131,15 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# SLACK API Configurations
+# ----------------------------------------------
+# use your keys
+VERIFICATION_TOKEN = 'tKDQ9EHwBZpcDCiFxSoBPY6H'
+OAUTH_ACCESS_TOKEN = 'xoxp-1160741229927-2927562415123-2913192058551-146963152d0243cb325b588f1d52fd36'
+CLIENT_ID = '1160741229927.2951481346768'
+CLIENT_SECRET = '32310bd8d3e8db0763ac037f96b268fa'
+BOT_USER_ACCESS_TOKEN = 'xoxb-1160741229927-2930106095572-IR0auNuQUDvjoUSdwd34ZQTq'
 
 
 try:

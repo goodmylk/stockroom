@@ -7,7 +7,6 @@ $(document).ready(function () {
 
     var LINECHARTEXMPLE   = $('#lineChartExample'),
         PIECHARTEXMPLE    = $('#pieChartExample'),
-        BARCHARTEXMPLE    = $('#barChartExample'),
         RADARCHARTEXMPLE  = $('#radarChartExample'),
         POLARCHARTEXMPLE  = $('#polarChartExample');
 
@@ -15,7 +14,7 @@ $(document).ready(function () {
     var lineChartExample = new Chart(LINECHARTEXMPLE, {
         type: 'line',
         data: {
-            labels: ["January", "February", "March", "April", "May", "June", "July"],
+            labels: ["January", "February", "March"],
             datasets: [
                 {
                     label: "Data Set One",
@@ -37,7 +36,7 @@ $(document).ready(function () {
                     pointHoverBorderWidth: 2,
                     pointRadius: 1,
                     pointHitRadius: 10,
-                    data: [50, 20, 40, 31, 32, 22, 10],
+                    data: [50, 20, 40],
                     spanGaps: false
                 },
                 {
@@ -60,7 +59,7 @@ $(document).ready(function () {
                     pointHoverBorderWidth: 2,
                     pointRadius: 1,
                     pointHitRadius: 10,
-                    data: [65, 59, 30, 81, 56, 55, 40],
+                    data: [65, 59, 30],
                     spanGaps: false
                 }
             ]
@@ -96,63 +95,6 @@ $(document).ready(function () {
     var pieChartExample = {
         responsive: true
     };
-
-    var barChartExample = new Chart(BARCHARTEXMPLE, {
-        type: 'bar',
-        data: {
-            labels: ["January", "February", "March", "April", "May", "June", "July"],
-            datasets: [
-                {
-                    label: "Data Set 1",
-                    backgroundColor: [
-                        'rgba(51, 179, 90, 0.6)',
-                        'rgba(51, 179, 90, 0.6)',
-                        'rgba(51, 179, 90, 0.6)',
-                        'rgba(51, 179, 90, 0.6)',
-                        'rgba(51, 179, 90, 0.6)',
-                        'rgba(51, 179, 90, 0.6)',
-                        'rgba(51, 179, 90, 0.6)'
-                    ],
-                    borderColor: [
-                        'rgba(51, 179, 90, 1)',
-                        'rgba(51, 179, 90, 1)',
-                        'rgba(51, 179, 90, 1)',
-                        'rgba(51, 179, 90, 1)',
-                        'rgba(51, 179, 90, 1)',
-                        'rgba(51, 179, 90, 1)',
-                        'rgba(51, 179, 90, 1)'
-                    ],
-                    borderWidth: 1,
-                    data: [65, 59, 80, 81, 56, 55, 40],
-                },
-                {
-                    label: "Data Set 2",
-                    backgroundColor: [
-                        'rgba(203, 203, 203, 0.6)',
-                        'rgba(203, 203, 203, 0.6)',
-                        'rgba(203, 203, 203, 0.6)',
-                        'rgba(203, 203, 203, 0.6)',
-                        'rgba(203, 203, 203, 0.6)',
-                        'rgba(203, 203, 203, 0.6)',
-                        'rgba(203, 203, 203, 0.6)'
-                    ],
-                    borderColor: [
-                        'rgba(203, 203, 203, 1)',
-                        'rgba(203, 203, 203, 1)',
-                        'rgba(203, 203, 203, 1)',
-                        'rgba(203, 203, 203, 1)',
-                        'rgba(203, 203, 203, 1)',
-                        'rgba(203, 203, 203, 1)',
-                        'rgba(203, 203, 203, 1)'
-                    ],
-                    borderWidth: 1,
-                    data: [35, 40, 60, 47, 88, 27, 30],
-                }
-            ]
-        }
-    });
-
-
 
     var polarChartExample = new Chart(POLARCHARTEXMPLE, {
         type: 'polarArea',

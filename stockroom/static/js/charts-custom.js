@@ -100,7 +100,7 @@ $(document).ready(function () {
     var barChartExample = new Chart(BARCHARTEXMPLE, {
         type: 'bar',
         data: {
-            labels: ["January", "February", "March", "April", "May", "June", "July"],
+            labels: ["January", "February", "March", ],
             datasets: [
                 {
                     label: "Data Set 1",
@@ -123,7 +123,7 @@ $(document).ready(function () {
                         'rgba(51, 179, 90, 1)'
                     ],
                     borderWidth: 1,
-                    data: [65, 59, 80, 81, 56, 55, 40],
+                    data: [65, 59, 80,],
                 },
                 {
                     label: "Data Set 2",
@@ -146,7 +146,7 @@ $(document).ready(function () {
                         'rgba(203, 203, 203, 1)'
                     ],
                     borderWidth: 1,
-                    data: [35, 40, 60, 47, 88, 27, 30],
+                    data: [35, 40, 60, 47, ],
                 }
             ]
         }

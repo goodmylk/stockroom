@@ -1,0 +1,150 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% load static %}
+<body>
+  <!-- Counts Section -->
+  <section class="dashboard-counts pt-2" style='background-color: rgb(240, 245, 245);'>
+    <div class="container-fluid pt-3">
+      <div class="row">
+        <div class="col-lg-8 col-md-12">
+          <h2 style="font-family: Overpass;">CURRENT STOCK</h2>
+        </div>
+        <span class="text-uppercase">Last Updated: {{update.dcount|date:"d/m/y"}}</span>
+      </div>
+    </div>
+    <div class="row pt-3">
+      <!-- Count item widget-->
+      {% for batch in batches %}
+      <div class="col-xl-3 col-md-4 col-6 pt-3">
+        <div class="wrapper count-title d-flex">
+          <div class="icon"><img src="{% static '/img/milk.png' %}" width= 30rmp;></img></div>
+          <div class="name">
+            <a href="#">
+              <strong class="text-uppercase">{{ batch.name}}</strong></a>
+              {% if batch.dcount < 30 %}
+              <div class="count-number red" style="color: rgb(255,0,0)">{{ batch.dcount }}</div>
+              {% else %}
+              <div class="count-number" style="color: rgb(0,128,0)">{{ batch.dcount }}</div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </section>
+    <section class="dashboard-header section-padding">
+      <div class="row">
+        <div class="col-md-1">
+        </div>
+        <div class="col-md-10">
+          <div class="card bar-chart-example">
+            <div class="col-md-7">
+              <h2 style="font-family: Overpass;">VOLUME MOVED</h2>
+            </div>
+            <div class="card-header d-flex align-items-center">
+              <!-- Volume Moved-->
+              <div class="row">
+                <div class="col-md-5">
+                  <form id="typeform" method="POST" action="{% url 'whouse' warehouse.id %}">
+                    {% csrf_token %}
+                    <h6 style="font-family: Overpass; margin-top: 0.5em;">Select Type</h6>
+                      <select class="form-control" id="type" name='type'>
+                        {% for type in ty %}
+                        <option value="{{ type }}">{{ type }}</option>
+                        {% endfor %}
+                      </select>
+                  </div>
+                  <div class="col-md-7">
+                    <h6 style="font-family: Overpass; margin-top: 0.5em;">Select Date</h6>
+                      <select class="form-control" id="time" name='time'>
+                        {% for dt in select_date %}
+                        <option value={{ dt }}>{{ dt }}</option>
+                        {% endfor %}
+                      </select>
+                  </div>
+                </div>
+              </div>
+              <div class="card-body align-content-center">
+                <canvas id="chart"></canvas>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-1">
+          </div>
+        </div>
+      </section>
+      <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
+      <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+      <script src="{% static 'js/grasp_mobile_progress_circle-1.0.0.min.js' %}"></script>
+      <script src="{% static 'vendor/jquery.cookie/jquery.cookie.js' %}"> </script>
+      <script src="{% static 'vendor/chart.js/Chart.min.js' %}"></script>
+      <script src="{% static 'vendor/jquery-validation/jquery.validate.min.js' %}"></script>
+      <script src="{% static 'vendor/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.concat.min.js' %}"></script>
+      <script src="{% static 'js/charts-custom.js' %}"></script>
+
+      <script>
+        window.onload = function () {
+
+          var labels = [
+          {% for item in volume %}
+          "{{ item.name }}",
+          {% endfor %}
+          ]
+
+          var data = [
+          {% for item in volume %}
+          {{ item.sum_quantity }},
+          {% endfor %}
+          ]
+
+          var config = {
+            type: 'bar',
+            data: {
+              labels: labels,
+              datasets: [
+              {
+                label: "{{ select_date.0 }}",
+                backgroundColor: [
+                'rgb(164,217,216)',
+                'rgb(164,217,216)',
+                'rgb(164,217,216)',
+                'rgb(164,217,216)',
+                'rgb(164,217,216)',
+                'rgb(164,217,216)',
+                'rgb(164,217,216)'
+                ],
+                borderColor: [
+                'rgb(164,217,216)',
+                'rgb(164,217,216)',
+                'rgb(164,217,216)',
+                'rgb(164,217,216)',
+                'rgb(164,217,216)',
+                'rgb(164,217,216)',
+                'rgb(164,217,216)'
+                ],
+                borderWidth: 1,
+                data: data,
+              },
+              ]
+            }
+          };
+
+          var ctx = document.getElementById('chart').getContext('2d');
+          window.myBar = new Chart(ctx, config);
+        };
+      </script>
+      <script type="text/javascript">
+        var type = document.getElementById("type");
+        var time = document.getElementById("time");
+
+        type.onchange = function(){
+          document.getElementById("typeform").submit()
+        };
+
+        time.onchange = function(){
+          document.getElementById("typeform").submit()
+        };
+      </script>
+    </body>
+    {% endblock %}
