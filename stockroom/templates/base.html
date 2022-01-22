@@ -38,7 +38,7 @@
                 <div class="brand-text d-none d-md-inline-block"><strong class="text" style="text:white;">STOCKROOM</strong></div></a></div>
             <ul class="nav-menu list-unstyled d-flex flex-md-row align-items-md-center">
               <!-- Order Processing dropdown    -->
-              <li class="nav-item dropdown"><a id="languages" rel="nofollow" data-target="#" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="navbar-brand dropdown-toggle">Order Processing</a>
+              <li class="nav-item dropdown"><a id="languages" rel="nofollow" data-target="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="navbar-brand dropdown-toggle" style="cursor: pointer;">Order Processing</a>
                 <ul aria-labelledby="languages" class="dropdown-menu">
                   <li><a rel="nofollow" href="{% url 'bengaluru' %}" class="dropdown-item text-center"> <span>Bengaluru</span></a></li>
                   <li><hr class="dropdown-divider" /></li>
@@ -48,7 +48,7 @@
                 </ul>
               </li>
               <!-- Warehouse dropdown    -->
-              <li class="nav-item dropdown"><a id="languages" rel="nofollow" data-target="#" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="navbar-brand dropdown-toggle">Warehouse</a>
+              <li class="nav-item dropdown"><a id="languages" rel="nofollow" data-target="#"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="navbar-brand dropdown-toggle" style="cursor: pointer;">Warehouse</a>
                 <ul aria-labelledby="languages" class="dropdown-menu">
                   {% for wh in all_warehouse %}
                     <li><a rel="nofollow" href="{% url 'whouse' wh.id %}" class="dropdown-item text-center"> <span>{{wh.name}}</span></a></li>
@@ -57,7 +57,7 @@
                 </ul>
               </li>
               <!-- Reports dropdown    -->
-              <li class="nav-item dropdown"><a id="languages" rel="nofollow" data-target="#" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="navbar-brand dropdown-toggle">Add Report</a>
+              <li class="nav-item dropdown"><a id="languages" rel="nofollow" data-target="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="navbar-brand dropdown-toggle" style="cursor: pointer;">Add Report</a>
                 <ul aria-labelledby="languages" class="dropdown-menu">
                   <li><a rel="nofollow" href="{% url 'delivery' %}" class="dropdown-item text-center"> <span>Delivery</span></a></li>
                   <li><hr class="dropdown-divider" /></li>

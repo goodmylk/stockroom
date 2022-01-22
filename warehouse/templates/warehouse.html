@@ -1,7 +1,6 @@
 {% extends 'base.html' %}
-
-{% block content %}
 {% load static %}
+{% block content %}
 <body>
   <!-- Counts Section -->
   <section class="dashboard-counts pt-2" style='background-color: rgb(240, 245, 245);'>
@@ -40,7 +39,7 @@
         <div class="col-md-10">
           <div class="card bar-chart-example">
             <div class="col-md-7">
-              <h2 style="font-family: Overpass;">VOLUME MOVED</h2>
+              <h2 style="font-family: Overpass;">PRODUCTS DELIVERED</h2>
             </div>
             <div class="card-header d-flex align-items-center">
               <!-- Volume Moved-->
@@ -74,14 +73,6 @@
           </div>
         </div>
       </section>
-      <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
-      <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
-      <script src="{% static 'js/grasp_mobile_progress_circle-1.0.0.min.js' %}"></script>
-      <script src="{% static 'vendor/jquery.cookie/jquery.cookie.js' %}"> </script>
-      <script src="{% static 'vendor/chart.js/Chart.min.js' %}"></script>
-      <script src="{% static 'vendor/jquery-validation/jquery.validate.min.js' %}"></script>
-      <script src="{% static 'vendor/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.concat.min.js' %}"></script>
-      <script src="{% static 'js/charts-custom.js' %}"></script>
 
       <script>
         window.onload = function () {
@@ -98,6 +89,7 @@
           {% endfor %}
           ]
 
+          let numberoflabels = labels.length;
           var config = {
             type: 'bar',
             data: {
@@ -105,24 +97,8 @@
               datasets: [
               {
                 label: "{{ select_date.0 }}",
-                backgroundColor: [
-                'rgb(164,217,216)',
-                'rgb(164,217,216)',
-                'rgb(164,217,216)',
-                'rgb(164,217,216)',
-                'rgb(164,217,216)',
-                'rgb(164,217,216)',
-                'rgb(164,217,216)'
-                ],
-                borderColor: [
-                'rgb(164,217,216)',
-                'rgb(164,217,216)',
-                'rgb(164,217,216)',
-                'rgb(164,217,216)',
-                'rgb(164,217,216)',
-                'rgb(164,217,216)',
-                'rgb(164,217,216)'
-                ],
+                backgroundColor: Array.apply(null, Array(numberoflabels)).map(_ => 'rgb(164,217,216)'),
+                borderColor:  Array.apply(null, Array(numberoflabels)).map(_ => 'rgb(164,217,216)'),
                 borderWidth: 1,
                 data: data,
               },
@@ -146,5 +122,5 @@
           document.getElementById("typeform").submit()
         };
       </script>
-    </body>
+      </body>
     {% endblock %}
