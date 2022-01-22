@@ -102,7 +102,7 @@ def whouse(request, warehouse_id):
 
                 if tm == "Last_Week":
                     wk = timezone.now() - timedelta(days=7)
-                    current_week = wk.year
+                    current_week = wk.isocalendar()[1]
                     current_year = wk.year
 
                 volume = (Delivery.objects
