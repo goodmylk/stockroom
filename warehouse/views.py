@@ -10,6 +10,7 @@ from datetime import date, timedelta
 import json
 from django.http import HttpResponse
 import csv
+import statistics
 
 # Create your views here.
 @login_required(login_url="/accounts/login")
@@ -43,7 +44,7 @@ def whouse(request, warehouse_id):
         name = Product.objects.get(pk=l["batch__productname"])
         l['name'] = name
         try:
-            l['wk_avg'] = sum(wk_avg[l["batch__productname"]])/len(wk_avg[l["batch__productname"]])
+            l['wk_avg'] = statistics.median(wk_avg[l["batch__productname"]])
         except KeyError:
             l['wk_avg'] = ''
 
