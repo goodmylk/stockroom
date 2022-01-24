@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 {% load static %}
 <html>
+
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -29,64 +30,80 @@
   <!-- Favicon-->
   <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}">
 </head>
-    <header class="header">
-      <nav class="navbar">
-        <div class="container-fluid">
-          <div class="navbar-holder d-flex align-items-center justify-content-between">
-            <div class="navbar-header">
-              <a href="{% url 'dashboard' %}" class="navbar-brand">
-                <div class="brand-text d-none d-md-inline-block"><strong class="text" style="text:white;">STOCKROOM</strong></div></a></div>
-            <ul class="nav-menu list-unstyled d-flex flex-md-row align-items-md-center">
-              <!-- Order Processing dropdown    -->
-              <li class="nav-item dropdown"><a id="languages" rel="nofollow" data-target="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="navbar-brand dropdown-toggle" style="cursor: pointer;">Order Processing</a>
-                <ul aria-labelledby="languages" class="dropdown-menu">
-                  <li><a rel="nofollow" href="{% url 'bengaluru' %}" class="dropdown-item text-center"> <span>Bengaluru</span></a></li>
-                  <li><hr class="dropdown-divider" /></li>
-                  <li><a rel="nofollow" href="" class="dropdown-item text-center"> <span>Nation Wide</span></a></li>
-                  <li><hr class="dropdown-divider" /></li>
-                  <li><a rel="nofollow" href="" class="dropdown-item text-center"> <span>Amazon</span></a></li>
-                </ul>
-              </li>
-              <!-- Warehouse dropdown    -->
-              <li class="nav-item dropdown"><a id="languages" rel="nofollow" data-target="#"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="navbar-brand dropdown-toggle" style="cursor: pointer;">Warehouse</a>
-                <ul aria-labelledby="languages" class="dropdown-menu">
-                  {% for wh in all_warehouse %}
-                    <li><a rel="nofollow" href="{% url 'whouse' wh.id %}" class="dropdown-item text-center"> <span>{{wh.name}}</span></a></li>
-                    <li><hr class="dropdown-divider" /></li>
-                  {% endfor %}
-                </ul>
-              </li>
-              <!-- Reports dropdown    -->
-              <li class="nav-item dropdown"><a id="languages" rel="nofollow" data-target="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="navbar-brand dropdown-toggle" style="cursor: pointer;">Add Report</a>
-                <ul aria-labelledby="languages" class="dropdown-menu">
-                  <li><a rel="nofollow" href="{% url 'delivery' %}" class="dropdown-item text-center"> <span>Delivery</span></a></li>
-                  <li><hr class="dropdown-divider" /></li>
-                  <li><a rel="nofollow" href="{% url 'returnreports' %}" class="dropdown-item text-center"> <span>Return</span></a></li>
-                  <li><hr class="dropdown-divider" /></li>
-                  <li><a rel="nofollow" href="{% url 'instock' %}" class="dropdown-item text-center"> <span>Instock</span></a></li>
-                  <li><hr class="dropdown-divider" /></li>
-                  <li><a rel="nofollow" href="{% url 'addbatch' %}" class="dropdown-item text-center"> <span>Batch</span></a></li>
-                  <li><hr class="dropdown-divider" /></li>
-                  <li><a rel="nofollow" href="{% url 'notdelivered' %}" class="dropdown-item text-center"> <span>NDR</span></a></li>
-                </ul>
-              </li>
-              <br>
-              <!-- Log out-->
-              <li>
-                <a class="navbar-brand" href="javascript:{document.getElementById('logout').submit()}"  onclick="" tabindex="-1" aria-disabled="true">
-                <form id="logout" method="POST" action="{% url 'logout' %}">
-                  {% csrf_token %}
-                  <input type="hidden" />
-                </form>
-                <i class="fa fa-sign-out"></i>
-                Logout
-              </a>
-            </li>
-            </ul>
-          </div>
+<header class="header">
+  <nav class="navbar">
+    <div class="container-fluid">
+      <div class="navbar-holder d-flex align-items-center justify-content-between">
+        <div class="navbar-header">
+          <a href="{% url 'dashboard' %}" class="navbar-brand">
+            <div class="brand-text d-none d-md-inline-block"><strong class="text" style="text:white;">STOCKROOM</strong></div>
+          </a>
         </div>
-      </nav>
-    </header>
+        <ul class="nav-menu list-unstyled d-flex flex-md-row align-items-md-center">
+          <!-- Order Processing dropdown    -->
+          <li class="nav-item dropdown"><a id="languages" rel="nofollow" data-target="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="navbar-brand dropdown-toggle" style="cursor: pointer;">Order Processing</a>
+            <ul aria-labelledby="languages" class="dropdown-menu">
+              <li><a rel="nofollow" href="{% url 'bengaluru' %}" class="dropdown-item text-center"> <span>Bengaluru</span></a></li>
+              <li>
+                <hr class="dropdown-divider" />
+              </li>
+              <li><a rel="nofollow" href="" class="dropdown-item text-center"> <span>Nation Wide</span></a></li>
+              <li>
+                <hr class="dropdown-divider" />
+              </li>
+              <li><a rel="nofollow" href="" class="dropdown-item text-center"> <span>Amazon</span></a></li>
+            </ul>
+          </li>
+          <!-- Warehouse dropdown    -->
+          <li class="nav-item dropdown"><a id="languages" rel="nofollow" data-target="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="navbar-brand dropdown-toggle" style="cursor: pointer;">Warehouse</a>
+            <ul aria-labelledby="languages" class="dropdown-menu">
+              {% for wh in all_warehouse %}
+              <li><a rel="nofollow" href="{% url 'whouse' wh.id %}" class="dropdown-item text-center"> <span>{{wh.name}}</span></a></li>
+              <li>
+                <hr class="dropdown-divider" />
+              </li>
+              {% endfor %}
+            </ul>
+          </li>
+          <!-- Reports dropdown    -->
+          <li class="nav-item dropdown"><a id="languages" rel="nofollow" data-target="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="navbar-brand dropdown-toggle" style="cursor: pointer;">Add Report</a>
+            <ul aria-labelledby="languages" class="dropdown-menu">
+              <li><a rel="nofollow" href="{% url 'delivery' %}" class="dropdown-item text-center"> <span>Delivery</span></a></li>
+              <li>
+                <hr class="dropdown-divider" />
+              </li>
+              <li><a rel="nofollow" href="{% url 'returnreports' %}" class="dropdown-item text-center"> <span>Return</span></a></li>
+              <li>
+                <hr class="dropdown-divider" />
+              </li>
+              <li><a rel="nofollow" href="{% url 'instock' %}" class="dropdown-item text-center"> <span>Instock</span></a></li>
+              <li>
+                <hr class="dropdown-divider" />
+              </li>
+              <li><a rel="nofollow" href="{% url 'addbatch' %}" class="dropdown-item text-center"> <span>Batch</span></a></li>
+              <li>
+                <hr class="dropdown-divider" />
+              </li>
+              <li><a rel="nofollow" href="{% url 'notdelivered' %}" class="dropdown-item text-center"> <span>NDR</span></a></li>
+            </ul>
+          </li>
+          <br>
+          <!-- Log out-->
+          <li>
+            <a class="navbar-brand" href="javascript:{document.getElementById('logout').submit()}" onclick="" tabindex="-1" aria-disabled="true">
+              <form id="logout" method="POST" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <input type="hidden" />
+              </form>
+              <i class="fa fa-sign-out"></i>
+              Logout
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+</header>
 
 {% block content %}
 {% endblock %}
@@ -96,10 +113,10 @@
     <div class="col-sm-12">
       <p class="mb-1">© Veganarke Enteprises Pvt Ltd {% now "Y" %}</p>
     </div>
-  <div class="col-sm-12">
-    <p>Design by <a href="https://bootstrapious.com/p/bootstrap-4-dashboard" style="color: grey; text-decoration: none;">Bootstrapious</a></p>
-    <!-- Please do not remove the backlink to us unless you support further theme's development at https://bootstrapious.com/donate. It is part of the license conditions and it helps me to run Bootstrapious. Thank you for understanding :)-->
-  </div>
+    <div class="col-sm-12">
+      <p>Design by <a href="https://bootstrapious.com/p/bootstrap-4-dashboard" style="color: grey; text-decoration: none;">Bootstrapious</a></p>
+      <!-- Please do not remove the backlink to us unless you support further theme's development at https://bootstrapious.com/donate. It is part of the license conditions and it helps me to run Bootstrapious. Thank you for understanding :)-->
+    </div>
   </div>
 </footer>
 
@@ -115,4 +132,5 @@
 <script src="{% static 'js/charts-home.js' %}"></script>
 <!-- Main File-->
 <script src="{% static 'js/front.js' %}"></script>
+
 </html>
