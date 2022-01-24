@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from products.models import Product, Batch
 from .models import Warehouse, WarehouseStock
-from django.db.models import Sum, Max, Q
+from django.db.models import Sum, Max, Q, Avg
 from reports.models import Delivery
 from django.db.models.functions import ExtractWeek, ExtractYear, ExtractMonth
 from datetime import date, timedelta
@@ -24,9 +24,28 @@ def whouse(request, warehouse_id):
     .order_by()
     )
 
+    weekly_average = list((Delivery.objects
+    .filter(warehouse_name = Warehouse.objects.get(pk = warehouse_id))
+    .filter(~Q(type="ST"))
+    .annotate(week=ExtractWeek('delivery_date'))
+    .values('week','batch_number__productname')
+    .annotate(sum_quantity=Sum('quantity'))
+    .values('batch_number__productname','sum_quantity')
+    ))
+
+    wk_avg = {}
+    for q in weekly_average:
+        k = q['batch_number__productname']
+        wk_avg.setdefault(k, [])
+        wk_avg[k].append(q['sum_quantity'])
+
     for l in batch:
         name = Product.objects.get(pk=l["batch__productname"])
         l['name'] = name
+        try:
+            l['wk_avg'] = sum(wk_avg[l["batch__productname"]])/len(wk_avg[l["batch__productname"]])
+        except KeyError:
+            l['wk_avg'] = ''
 
     update = Delivery.objects.filter(warehouse_name = Warehouse.objects.get(pk = warehouse_id)).aggregate(dcount=Max('delivery_date'))
 

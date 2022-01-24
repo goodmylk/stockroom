@@ -3,35 +3,46 @@
 {% load replace_string %}
 {% block content %}
 
+<style>
+.vl {
+  border-left: 1.5px solid grey;
+  border-color: rgb(238,238,238);
+  height: 80px;
+  position: absolute;
+  left: 50%;
+  margin-left: -3px;
+  top: 25%;
+}
+</style>
+
 <body>
   <!-- Counts Section -->
-  <section class="dashboard-counts pt-2" style='background-color: rgb(240, 245, 245);'>
+  <section class="statistics pt-2" style='background-color: rgb(240, 245, 245);'>
     <div class="container-fluid pt-3">
       <div class="row">
         <div class="col-lg-8 col-md-12">
-          <h2 style="font-family: Overpass;">CURRENT STOCK - {{warehouse.name|upper }}</h2>
+          <h2 style="font-family: Overpass;">WEEKLY AVERAGE DELIVERED- {{warehouse.name|upper }}</h2>
         </div>
         <span class="text-uppercase">Last Updated: {{update.dcount|date:"d/m/y"}}</span>
       </div>
-    </div>
-    <div class="row pt-3">
-      <!-- Count item widget-->
-      {% for batch in batches %}
-      <div class="col-xl-3 col-md-4 col-6 pt-3">
-        <div class="wrapper count-title d-flex">
-          <div class="icon"><img src="{% static '/img/milk.png' %}" width=30rmp;></img></div>
-          <div class="name">
-            <a href="#">
-              <strong class="text-uppercase">{{ batch.name}}</strong></a>
-            {% if batch.dcount < 30 %}
-            <div class="count-number red" style="color: rgb(255,0,0)">{{ batch.dcount }}</div>
-            {% else %}
-            <div class="count-number" style="color: rgb(0,128,0)">{{ batch.dcount }}</div>
-            {% endif %}
+      <div class="row d-flex">
+        {% for batch in batches %}
+        <div class="col-lg-3 pb-2">
+          <!-- Monthly Usage-->
+          <div class="card data-usage">
+            <h2 class="display h4">{{ batch.name }}</h2>
+            <div class="row d-flex align-items-center">
+              <div class="col-sm-6">
+                <strong class="text-primary">{{ batch.wk_avg|round_int }}</strong><span>Weekly Average</span>
+              </div>
+              <div class="vl"></div>
+              <div class="col-sm-6"><strong class="text-primary">{{ batch.dcount }}</strong><span>Current Stock</span></div>
+            </div>
+              <p>Estimated to last for {{  batch.dcount|divide_round:batch.wk_avg }} weeks</p>
           </div>
         </div>
+        {% endfor %}
       </div>
-      {% endfor %}
     </div>
   </section>
   <section class="dashboard-header section-padding">
@@ -75,7 +86,6 @@
       </div>
     </div>
   </section>
-
   <script>
     window.onload = function() {
 
@@ -106,6 +116,12 @@
 
       var myoption = {
         scales: {
+          yAxes: [{
+                    scaleLabel: {
+                      display: true,
+                      labelString: 'Number of Packs'
+                    }
+                }],
           y: {
             beginAtZero: true
           }
