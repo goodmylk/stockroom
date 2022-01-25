@@ -16,6 +16,8 @@ def round_int(value):
 
 @register.filter(name='divide_round')
 def divide_round(value, arg):
+    if value == None:
+        return 0
     try:
         return round(float(value) / float(arg), 1)
     except (ValueError, ZeroDivisionError):

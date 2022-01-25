@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
-from products.models import Product, Batch
+from products.models import Product
 from .models import Warehouse, WarehouseStock
 from django.db.models import Sum, Max, Q, Avg
 from reports.models import Delivery
@@ -17,15 +17,8 @@ import statistics
 def whouse(request, warehouse_id):
     wh = get_object_or_404(Warehouse, pk=warehouse_id)
 
-    batch = (WarehouseStock.objects
-    .filter(is_active = True)
-    .filter(name = Warehouse.objects.get(pk = warehouse_id))
-    .values('batch__productname')
-    .annotate(dcount=Sum('current_stock'))
-    .order_by()
-    )
-
     weekly_average = list((Delivery.objects
+    .filter(~Q(delivery_date__week = date.today().isocalendar()[1]))
     .filter(warehouse_name = Warehouse.objects.get(pk = warehouse_id))
     .filter(~Q(type="ST"))
     .annotate(week=ExtractWeek('delivery_date'))
@@ -40,13 +33,16 @@ def whouse(request, warehouse_id):
         wk_avg.setdefault(k, [])
         wk_avg[k].append(q['sum_quantity'])
 
-    for l in batch:
-        name = Product.objects.get(pk=l["batch__productname"])
-        l['name'] = name
-        try:
-            l['wk_avg'] = statistics.median(wk_avg[l["batch__productname"]])
-        except KeyError:
-            l['wk_avg'] = ''
+    d_avg = []
+    for l in wk_avg:
+        name = Product.objects.get(pk=l)
+        current_stock = (WarehouseStock.objects
+                    .filter(is_active = True)
+                    .filter(name = Warehouse.objects.get(pk = warehouse_id))
+                    .filter(batch__productname = name)
+                    .aggregate(Sum('current_stock')))
+
+        d_avg.append({'name':name,'wk_avg':statistics.median(wk_avg[l]),'current_stock':current_stock})
 
     update = Delivery.objects.filter(warehouse_name = Warehouse.objects.get(pk = warehouse_id)).aggregate(dcount=Max('delivery_date'))
 
@@ -92,8 +88,8 @@ def whouse(request, warehouse_id):
                     name = Product.objects.get(pk=l["batch_number__productname"])
                     l['name'] = str(name)
 
-                return render(request, 'warehouse.html', {'warehouse':wh,'batches':batch,'update':update,
-                    "select_date":select_date,"ty":ty,'volume':volume})
+                return render(request, 'warehouse.html', {'warehouse':wh,'update':update,
+                    "select_date":select_date,"ty":ty,'volume':volume,"d_avg":d_avg})
 
             else:
                 if (tm == "Last_Month"):
@@ -115,8 +111,8 @@ def whouse(request, warehouse_id):
                     name = Product.objects.get(pk=l["batch_number__productname"])
                     l['name'] = str(name)
 
-                return render(request, 'warehouse.html', {'warehouse':wh,'batches':batch,'update':update,
-                    "select_date":select_date,"ty":ty,'volume':volume})
+                return render(request, 'warehouse.html', {'warehouse':wh,'update':update,
+                    "select_date":select_date,"ty":ty,'volume':volume,"d_avg":d_avg})
 
         else:
 
@@ -141,8 +137,8 @@ def whouse(request, warehouse_id):
                     name = Product.objects.get(pk=l["batch_number__productname"])
                     l['name'] = str(name)
 
-                return render(request, 'warehouse.html', {'warehouse':wh,'batches':batch,'update':update,
-                    "select_date":select_date,"ty":ty,'volume':volume})
+                return render(request, 'warehouse.html', {'warehouse':wh,'update':update,
+                    "select_date":select_date,"ty":ty,'volume':volume,"d_avg":d_avg})
 
             else:
                 if (tm == "Last_Month"):
@@ -164,8 +160,8 @@ def whouse(request, warehouse_id):
                     name = Product.objects.get(pk=l["batch_number__productname"])
                     l['name'] = str(name)
 
-                return render(request, 'warehouse.html', {'warehouse':wh,'batches':batch,'update':update,
-                    "select_date":select_date,"ty":ty,'volume':volume})
+                return render(request, 'warehouse.html', {'warehouse':wh,'update':update,
+                    "select_date":select_date,"ty":ty,'volume':volume,"d_avg":d_avg})
 
     else:
 
@@ -185,5 +181,5 @@ def whouse(request, warehouse_id):
 
 
 
-        return render(request, 'warehouse.html', {'warehouse':wh,'batches':batch,'update':update,'volume':volume,
-                        "select_date":select_date, "ty":ty})
+        return render(request, 'warehouse.html', {'warehouse':wh,'update':update,'volume':volume,
+                        "select_date":select_date, "ty":ty,"d_avg":d_avg})
