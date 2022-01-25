@@ -33,13 +33,13 @@
             <h2 class="display h4">{{ batch.name }}</h2>
             <div class="row d-flex align-items-center">
               <div class="col-sm-6">
-                <strong class="count-number" style="color: rgb(0,128,0)">{{ batch.wk_avg|round_int }}</strong><span>Weekly Average</span>
+                <strong class="count-number text-center" style="color: rgb(0,128,0)">{{ batch.wk_avg|round_int }}</strong><span>Weekly Average</span>
               </div>
               <div class="vl"></div>
               {% if batch.current_stock.current_stock__sum != None %}
-              <div class="col-sm-6"><strong class="count-number" style="color: rgb(0,128,0)">{{ batch.current_stock.current_stock__sum }}</strong><span>Current Stock</span></div>
+              <div class="col-sm-6"><strong class="count-number text-center" style="color: rgb(0,128,0)">{{ batch.current_stock.current_stock__sum }}</strong><span>Current Stock</span></div>
               {% else %}
-              <div class="col-sm-6"><strong class="count-number red" style="color: rgb(255,0,0)">0</strong><span>Current Stock</span></div>
+              <div class="col-sm-6"><strong class="count-number red text-center" style="color: rgb(255,0,0)">0</strong><span>Current Stock</span></div>
               {% endif %}
             </div>
               <p>Estimated to last for {{  batch.current_stock.current_stock__sum|divide_round:batch.wk_avg }} weeks</p>
