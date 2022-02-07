@@ -60,12 +60,7 @@ def amazon(request):
         gc = gspread.authorize(credentials)
         workbook = gc.open_by_key(settings.SPREADSHEET_KEY)
         worksheet = workbook.worksheet("Master Sheet")
-        val = worksheet.get_all_values()
-        l = list(string.ascii_uppercase)
-        cells = worksheet.range("A{}:{}{}".format(len(val)+1,l[len(val[0])-1],len(val)+1))
-        for cell, val in zip(cells, [str(x) for x in df.loc[0].tolist()]):
-                cell.value = val
-        worksheet.update_cells(cells)
+        pandas_to_sheets(dd, worksheet)
 
         return render(request, 'amazon.html', {'msg':msg,'msg1':msg1})
 
