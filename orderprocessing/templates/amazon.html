@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% load static %}
+<body>
+  <section class="statistics pt-2 pb-2">
+    <div class="container" style="width: 60%;">
+      <form method="POST" action="" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="py-5 text-center">
+          <h2 class="display-5">Amazon Order Processing</h2>
+        </div>
+        {% if msg1 %}
+        <ul>
+      	   <h6 style="color:green;">{{ msg1.message }}</h6>
+        </ul>
+        {% endif %}
+        {% if msg %}
+        <ul>
+      	   <h6 style="color:red;">{{ msg.message }}</h6>
+        </ul>
+        {% endif %}
+          <div class="container pt-3">
+            <div class="row justify-content-between">
+              <div class="col-md-5 ">
+                <label for="file1"> Upload File</label>
+                <input type="file" id="file1" name="file">
+                <small>Only accepts txt files</small>
+              </div>
+              <div class="col-md-5 ">
+                <button class="btn btn-primary btn-block" type="submit">Transform</button>
+              </div>
+            </div>
+          </div>
+        </div>
+  </section>
+</body>
+{% endblock %}
