@@ -1,5 +1,6 @@
 import pandas as pd
 from .models import Box, Amzonproducts
+import gspread
 
 def filter_orders(orders):
     if orders['title'].isnull().sum() > 0:
@@ -137,8 +138,6 @@ def data_transform(df):
     return df, msg
 
 def iter_pd(df):
-    for val in df.columns:
-        yield val
     for row in df.to_numpy():
         for val in row:
             if pd.isna(val):
