@@ -1,6 +1,8 @@
 import pandas as pd
 from .models import Box, Amzonproducts
 import gspread
+from oauth2client.service_account import ServiceAccountCredentials
+from django.conf import settings
 
 def filter_orders(orders):
     if orders['title'].isnull().sum() > 0:
@@ -8,6 +10,26 @@ def filter_orders(orders):
         return to_drop
     else:
         return []
+
+
+def get_credentials():
+    cred = {
+            "type": settings.TYPE,
+            "project_id" : settings.PROJECT_ID,
+            "private_key_id" : settings.PRIVATE_KEY_ID,
+            "client_id" : settings.CLIENT_ID,
+            "auth_uri" : settings.AUTH_URI,
+            "token_uri" : settings.TOKEN_URI,
+            "auth_provider_x509_cert_url" : settings.AUTH_PROVIDER_X509_CERT_URL,
+            "client_x509_cert_url" : settings.CLIENT_X509_CERT_URL,
+            "private_key" : settings.PRIVATE_KEY,
+            "client_email": settings.CLIENT_EMAIL
+            }
+
+    scope = ['https://spreadsheets.google.com/feeds','https://www.googleapis.com/auth/drive']
+    credentials = ServiceAccountCredentials.from_json_keyfile_dict(cred, scope)
+    return gspread.authorize(credentials)
+
 
 def get_volumetric_weight(product):
     pr2 = pd.pivot(product.groupby(['Order ID','contents'], as_index=False).agg({'pack':'sum'}), columns='contents', index='Order ID')
@@ -101,7 +123,8 @@ def data_transform(df):
     df['ship-address-1'] = df['ship-address-1'].fillna('')
     df['Address'] = df['ship-address-1'] + ', ' + df['ship-address-2'] + ', '+ df['ship-address-3'] + ', '+ df['ship-city']
     df.columns = df.columns.str.replace('ship-postal-code','Pincode')
-
+    df.columns = df.columns.str.replace('purchase-date','Date & Time of Order creation')
+    df['Date & Time of Order creation'] = df['Date & Time of Order creation'].str.replace('T',' ')
 
     pr = pd.merge(amz, df[['Order ID','sku','quantity-to-ship']], on='sku', how='right')
     pr['pack'] = pr['quantity-to-ship'] * pr['pack']
@@ -133,7 +156,7 @@ def data_transform(df):
                                                   else 'DL' if x in st_nd
                                                   else 'MUM')
 
-    df = df[['Parcel','cod_amount','Customer Name','Mobile','Address','Pincode','Order ID','total_price','no of packs','final weight','title','Courier']]
+    df = df[['Parcel','cod_amount','Customer Name','Mobile','Address','Pincode','Order ID','total_price','no of packs','final weight','title','Courier','Date & Time of Order creation']]
 
     return df, msg
 

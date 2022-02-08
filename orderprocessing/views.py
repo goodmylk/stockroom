@@ -5,10 +5,9 @@ from django.contrib.auth.decorators import login_required
 from .functions import get_last_order_date, get_orders_dataframe
 import pandas as pd
 from .models import Amzonproducts
-from .utils import data_transform, iter_pd, pandas_to_sheets
+from .utils import data_transform, iter_pd, pandas_to_sheets, get_credentials
 from django.conf import settings
-import gspread
-from oauth2client.service_account import ServiceAccountCredentials
+
 import string
 
 
@@ -42,31 +41,29 @@ def amazon(request):
         if len(msg) == 0:
             msg1['message'] = "Order processed"
 
-        cred = {
-                "type": settings.TYPE,
-                "project_id" : settings.PROJECT_ID,
-                "private_key_id" : settings.PRIVATE_KEY_ID,
-                "client_id" : settings.CLIENT_ID,
-                "auth_uri" : settings.AUTH_URI,
-                "token_uri" : settings.TOKEN_URI,
-                "auth_provider_x509_cert_url" : settings.AUTH_PROVIDER_X509_CERT_URL,
-                "client_x509_cert_url" : settings.CLIENT_X509_CERT_URL,
-                "private_key" : settings.PRIVATE_KEY,
-                "client_email": settings.CLIENT_EMAIL
-                }
-
-        scope = ['https://spreadsheets.google.com/feeds','https://www.googleapis.com/auth/drive']
-        credentials = ServiceAccountCredentials.from_json_keyfile_dict(cred, scope)
-        gc = gspread.authorize(credentials)
+        gc = get_credentials()
         workbook = gc.open_by_key(settings.SPREADSHEET_KEY)
+        df1 = df[['Order ID','Date & Time of Order creation','title','no of packs','Courier']]
         worksheet = workbook.worksheet("Master Sheet")
         l = list(string.ascii_uppercase)
         (row, col) = df.shape
         val = worksheet.get_all_values()
-        cells = worksheet.range("A{}:{}".format(len(val)+1, l[len(val[0])-1],len(val)+1))
+        cells = worksheet.range("A{}:M".format(len(val)+1))
         for cell, val in zip(cells, iter_pd(df)):
             cell.value = val
         worksheet.update_cells(cells)
+
+        couriers = ["BNG","MUM","DL"]
+        for c in couriers:
+            if (df1['Courier'] == c).sum() > 0:
+                df2 = df1[df1['Courier'] == c]
+                worksheet = workbook.worksheet(c)
+                val = worksheet.get_all_values()
+                df2['Sl No.'] = [i for i in range(len(val), len(val)+len(df2))]
+                cells = worksheet.range("A{}:E".format(len(val)+1, len(val)+1))
+                for cell, val in zip(cells, iter_pd(df2[['Sl No.','Date & Time of Order creation','Order ID','title','no of packs']])):
+                    cell.value = val
+                worksheet.update_cells(cells)
 
         return render(request, 'amazon.html', {'msg':msg,'msg1':msg1})
 
