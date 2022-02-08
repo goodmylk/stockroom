@@ -48,7 +48,7 @@ def amazon(request):
         l = list(string.ascii_uppercase)
         (row, col) = df.shape
         val = worksheet.get_all_values()
-        cells = worksheet.range("A{}:M".format(len(val)+1))
+        cells = worksheet.range("A{}:M{}".format(len(val)+1, len(df)))
         for cell, val in zip(cells, iter_pd(df)):
             cell.value = val
         worksheet.update_cells(cells)
@@ -60,7 +60,7 @@ def amazon(request):
                 worksheet = workbook.worksheet(c)
                 val = worksheet.get_all_values()
                 df2['Sl No.'] = [i for i in range(len(val), len(val)+len(df2))]
-                cells = worksheet.range("A{}:E".format(len(val)+1, len(val)+1))
+                cells = worksheet.range("A{}:E{}".format(len(val)+1, len(val)+len(df2)))
                 for cell, val in zip(cells, iter_pd(df2[['Sl No.','Date & Time of Order creation','Order ID','title','no of packs']])):
                     cell.value = val
                 worksheet.update_cells(cells)
