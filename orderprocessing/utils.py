@@ -156,9 +156,9 @@ def data_transform(df):
                                                   else 'DL' if x in st_nd
                                                   else 'MUM')
 
-    df = df.drop_duplicates()
-    df = df[['Parcel','cod_amount','Customer Name','Mobile','Address','Pincode','Order ID','total_price','no of packs','final weight','title','Courier','Date & Time of Order creation','packs']]
 
+    df = df[['Parcel','cod_amount','Customer Name','Mobile','Address','Pincode','Order ID','total_price','no of packs','final weight','title','Courier','Date & Time of Order creation','packs']]
+    df.drop_duplicates(inplace=True)
     return df, msg
 
 def iter_pd(df):

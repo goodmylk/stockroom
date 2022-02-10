@@ -45,7 +45,6 @@ def amazon(request):
         workbook = gc.open_by_key(settings.SPREADSHEET_KEY)
         df1 = df[['Order ID','Date & Time of Order creation','title','packs','Courier']]
         df.drop('packs', axis=1, inplace=True)
-        df = df.drop_duplicates()
         worksheet = workbook.worksheet("Master Sheet")
         l = list(string.ascii_uppercase)
         (row, col) = df.shape
