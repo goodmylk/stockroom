@@ -128,9 +128,9 @@ def data_transform(df):
 
     pr = pd.merge(amz, df[['Order ID','sku','quantity-to-ship']], on='sku', how='right')
     pr['pack'] = pr['quantity-to-ship'] * pr['pack']
-
-    pr1 = pr.groupby('Order ID', as_index=False).agg({'title': ','.join,'contents': ','.join, 'pack':'sum', 'weight':'sum','price':'sum'})
-    pr1.columns = ['Order ID', 'title', 'contents', 'no of packs', 'weight','total_price']
+    pr['pack1'] = pr['pack'].apply(lambda x: str(x))
+    pr1 = pr.groupby('Order ID', as_index=False).agg({'title': ','.join,'contents': ','.join, 'pack':'sum', 'weight':'sum','price':'sum','pack1':','.join})
+    pr1.columns = ['Order ID', 'title', 'contents', 'no of packs', 'weight','total_price','packs']
 
     df = pd.merge(df, pr1, on='Order ID', how='left')
 
@@ -156,7 +156,8 @@ def data_transform(df):
                                                   else 'DL' if x in st_nd
                                                   else 'MUM')
 
-    df = df[['Parcel','cod_amount','Customer Name','Mobile','Address','Pincode','Order ID','total_price','no of packs','final weight','title','Courier','Date & Time of Order creation']]
+    df = df.drop_duplicates()
+    df = df[['Parcel','cod_amount','Customer Name','Mobile','Address','Pincode','Order ID','total_price','no of packs','final weight','title','Courier','Date & Time of Order creation','packs']]
 
     return df, msg
 
