@@ -43,7 +43,7 @@ def amazon(request):
 
         gc = get_credentials()
         workbook = gc.open_by_key(settings.SPREADSHEET_KEY)
-        df1 = df[['Order ID','Date & Time of Order creation','title','packs','Courier']]
+        df1 = df[['Order ID','Date & Time of Order creation','Customer Name','title','packs','Courier']]
         df.drop('packs', axis=1, inplace=True)
         worksheet = workbook.worksheet("Master Sheet")
         l = list(string.ascii_uppercase)
@@ -62,7 +62,7 @@ def amazon(request):
                 val = worksheet.get_all_values()
                 df2['Sl No.'] = [i for i in range(len(val), len(val)+len(df2))]
                 cells = worksheet.range("A{}:E{}".format(len(val)+1, len(val)+len(df2)+1))
-                for cell, val in zip(cells, iter_pd(df2[['Sl No.','Date & Time of Order creation','Order ID','title','packs']])):
+                for cell, val in zip(cells, iter_pd(df2[['Sl No.','Date & Time of Order creation','Order ID','Customer Name','title','packs']])):
                     cell.value = val
                 worksheet.update_cells(cells)
 
