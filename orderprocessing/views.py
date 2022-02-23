@@ -33,7 +33,9 @@ def nationwide(request):
 def orderwebhook(request):
     if request.method == 'POST':
         return render(request, 'orderwebhook.html', {'body':request.body})
-
+    else:
+        return render(request, 'orderwebhook.html')
+        
 @login_required(login_url="/accounts/login")
 def amazon(request):
     if request.method == 'POST':
