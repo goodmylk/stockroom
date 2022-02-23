@@ -2,7 +2,7 @@ from shopify import Order, PaginatedIterator
 import pandas as pd
 
 def get_last_order_date(last_order_id):
-    last_order = Order.find(name=last_order_id)
+    last_order = Order.find(name=last_order_id, status='any')
     for page in PaginatedIterator(last_order):
         for item in page:
             last_order_date = item.created_at
@@ -60,20 +60,9 @@ def get_orders_dataframe(order_object, panindia=True):
         df['Address'] = address
         df['Pincode'] = df['shipping_address'].apply(lambda x: x.zip if type(x) != float else 'NA')
         df['Address']  = df['Address'] + ' ' + df['Pincode']
-
-        #Delivery person tags
-        dl1 = ['babu','chandru', 'srinivas', 'gg', 'nandha','lokesh', 'madhu','prashanth','murugan','sandeep']
-        l = []
-        for x in df['tags']:
-            y = x.split(',')
-            l1 = []
-            for z in y:
-                if z.strip() in dl1:
-                    l1.append(z.strip())
-
-            l.append(l1)
-        l = [', '.join(x) for x in l]
-        df['Route'] = l
+        df['City']  = df['shipping_address'].apply(lambda x: x.city if type(x) != float else 'NA')
+        df['City'] = df['City'].apply(lambda x: x.title())
+        df = df[~(df['City'].str.lower().str.contains('mumbai') | df['City'].str.lower().str.contains('chennai') | df['City'].str.lower().str.contains('thane') | df['City'].str.lower().str.contains('hyderabad') )]
 
         #Carry bags
         l = []
@@ -87,5 +76,5 @@ def get_orders_dataframe(order_object, panindia=True):
             l.append(l1)
 
         df = pd.merge(df, pd.DataFrame(l, columns=['Order ID','Carry Bag']), on='Order ID', how='left')
-        df.drop(['shipping_lines','shipping_address','tags'], axis=1)
+        df.drop(['shipping_lines','shipping_address','tags','line_items'], axis=1, inplace=True)
         return df

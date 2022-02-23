@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% load static %}
+<h2>You have {{ df|length }} new orders</h2>
+<div class="col-lg-10 center" style="margin: 0 auto;">
+<div class="card bg-light text-center" style = "box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);">
+<div class="table-responsive">
+    <table class="table table-hover">
+    <thead>
+      <tr>
+      {% for column in col %}
+        <td class="text-uppercase">{{ column }}</td>
+      {% endfor %}
+      </tr>
+    </thead>
+    <tbody>
+      {% for orders in df %}
+      <tr>
+      {% for order in orders %}
+        <td>{{ order}}</td>
+      {% endfor %}
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  </div>
+</div>
+</div>
+{% endblock %}

@@ -7,13 +7,15 @@ import pandas as pd
 from .models import Amzonproducts
 from .utils import data_transform, iter_pd, pandas_to_sheets, get_credentials
 from django.conf import settings
+from django.http import HttpResponse
+from django.views.decorators.csrf import csrf_exempt
 
 import string
 
 
 @shop_login_required
 @login_required(login_url="/accounts/login")
-def bengaluru(request):
+def nationwide(request):
     if request.method == 'POST':
         last_order_id = str(int(request.POST['last_order_id']) + 1)
         last_order_date = get_last_order_date(last_order_id)
@@ -21,10 +23,16 @@ def bengaluru(request):
         orders = Order.find( fulfillment_status= "unfulfilled", order="created_at ASC", created_at_min = last_order_date, limit=250)
 
         df = get_orders_dataframe(orders)
-        ord_no = df['Order ID'].tolist()
-        return render(request, 'bengaluru.html',{'orders': ord_no})
+        df1 = df.to_numpy().tolist()
+        col = df.columns.tolist()
+        return render(request, 'nationwide.html',{'col': col,'last_order':last_order_date,'df':df1})
     else:
         return render(request, 'order_home.html')
+
+@csrf_exempt
+def orderwebhook(request):
+    if request.method == 'POST':
+        return render(request, 'orderwebhook.html', {'body':request.body})
 
 @login_required(login_url="/accounts/login")
 def amazon(request):
