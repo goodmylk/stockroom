@@ -9,7 +9,7 @@ from .utils import data_transform, iter_pd, pandas_to_sheets, get_credentials
 from django.conf import settings
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
-
+import json
 import string
 
 
@@ -29,13 +29,30 @@ def nationwide(request):
     else:
         return render(request, 'order_home.html')
 
+@shop_login_required
 @csrf_exempt
 def orderwebhook(request):
     if request.method == 'POST':
-        return render(request, 'orderwebhook.html', {'body':request.body})
-    else:
-        return render(request, 'orderwebhook.html')
-        
+        orderobject = json.loads(request.body.decode('utf-8'))
+        order_id = orderobject['name']
+        try:
+            pincode = orderobject['shipping_address']['zip']
+            tag = orderobject['tags']
+            tag = tag + "ST"
+            od = Order.find(name=order_id)
+            if len(od) >= 1:
+                od.tags = tag
+                od.save()
+            return HttpResponse(status=200)
+        except:
+            tag = orderobject['tags']
+            tag = tag + "STError"
+            od = Order.find(name=order_id)
+            if len(od) >= 1:
+                od.tags = tag
+                od.save()
+            return HttpResponse(status=200)
+
 @login_required(login_url="/accounts/login")
 def amazon(request):
     if request.method == 'POST':
