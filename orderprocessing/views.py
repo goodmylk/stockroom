@@ -10,6 +10,7 @@ from django.conf import settings
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
+import requests
 import string
 
 
@@ -29,29 +30,35 @@ def nationwide(request):
     else:
         return render(request, 'order_home.html')
 
-@shop_login_required
 @csrf_exempt
 def orderwebhook(request):
     if request.method == 'POST':
-        orderobject = json.loads(request.body.decode('utf-8'))
-        order_id = orderobject['name']
         try:
-            pincode = orderobject['shipping_address']['zip']
-            tag = orderobject['tags']
-            tag = tag + "ST"
-            od = Order.find(name=order_id)
-            if len(od) >= 1:
-                od.tags = tag
-                od.save()
+            orderobject = json.loads(request.body.decode('utf-8'))
+            order_id = str(orderobject['id'])
+            order_name = str(orderobject['name'])
+            print(order_name)
+            r = requests.get('https://'+ settings.API_KEY +':'+ settings.API_PASSWORD +'@gdmlk.myshopify.com/admin/api/2022-01/orders.json?limit=250&status=any&fields=tags&name={}'.format(order_name))
+            tags = pd.DataFrame(r.json()['orders'])['tags'].tolist()[0]
+            if 'Stockroom' not in tags:
+                tags = tags + ", Stockroom"
+
+                url = "https://"+ settings.API_KEY +":"+ settings.API_PASSWORD +"@gdmlk.myshopify.com/admin/api/2022-01/orders/{}.json".format(order_id)
+                payload = json.dumps({
+                  "order": {
+                    "id": order_id,
+                    "tags": tags
+                  }
+                })
+                headers = {
+                  'Content-Type': 'application/json'
+                }
+                response = requests.request("PUT", url, headers=headers, data=payload)
+
             return HttpResponse(status=200)
         except:
-            tag = orderobject['tags']
-            tag = tag + "STError"
-            od = Order.find(name=order_id)
-            if len(od) >= 1:
-                od.tags = tag
-                od.save()
             return HttpResponse(status=200)
+
 
 @login_required(login_url="/accounts/login")
 def amazon(request):

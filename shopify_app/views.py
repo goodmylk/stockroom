@@ -62,7 +62,7 @@ def finalize(request):
         return redirect(reverse(login))
     messages.info(request, "Logged in to shopify store.")
     request.session.pop('return_to', None)
-    return redirect(request.session.get('return_to', reverse('bengaluru')))
+    return redirect(request.session.get('return_to', reverse('nationwide')))
 
 def logout(request):
     request.session.pop('shopify', None)

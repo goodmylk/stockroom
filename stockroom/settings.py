@@ -16,8 +16,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-SHOPIFY_API_KEY = '65cdfeaa66aba266d5f37b2ecf831fb3'
-SHOPIFY_API_SECRET = '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'
+
 
 # Application definition
 
