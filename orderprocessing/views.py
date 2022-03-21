@@ -37,16 +37,16 @@ def orderwebhook(request):
             orderobject = json.loads(request.body.decode('utf-8'))
             order_id = str(orderobject['id'])
             order_name = str(orderobject['name'])
-            print(order_name)
-            r = requests.get('https://'+ settings.API_KEY +':'+ settings.API_PASSWORD +'@gdmlk.myshopify.com/admin/api/2022-01/orders.json?limit=250&status=any&fields=tags&name={}'.format(order_name))
+            r = requests.get('https://'+ settings.API_KEY +':'+ settings.API_PASSWORD +'@gdmlk.myshopify.com/admin/api/2022-01/orders.json?name={}'.format(order_name))
             tags = pd.DataFrame(r.json()['orders'])['tags'].tolist()[0]
+            o_id = pd.DataFrame(r.json()['orders'])['id'].tolist()[0]
             if 'Stockroom' not in tags:
                 tags = tags + ", Stockroom"
 
-                url = "https://"+ settings.API_KEY +":"+ settings.API_PASSWORD +"@gdmlk.myshopify.com/admin/api/2022-01/orders/{}.json".format(order_id)
+                url = "https://"+ settings.API_KEY +":"+ settings.API_PASSWORD +"@gdmlk.myshopify.com/admin/api/2022-01/orders/{}.json".format(o_id)
                 payload = json.dumps({
                   "order": {
-                    "id": order_id,
+                    "id": o_id,
                     "tags": tags
                   }
                 })
