@@ -4,7 +4,7 @@ from .models import Batch, Product
 from django.utils import timezone
 
 
-products = Product.objects
+products = Product.objects.filter(is_active=True).order_by('productname')
 
 @login_required(login_url="/accounts/login")
 def addbatch(request):
