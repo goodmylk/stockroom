@@ -8,7 +8,7 @@ from warehouse.models import Warehouse, WarehouseStock
 # Create your views here.
 @login_required(login_url="/accounts/login")
 def home(request):
-    warehousestocks = WarehouseStock.objects.filter(is_active = True)
+    warehousestocks = WarehouseStock.objects.filter(is_active = True).order_by('batch__productname__productname','batch__manufacture_date')
     update = (Delivery.objects
               .values('warehouse_name__name')
               .annotate(dcount=Max('delivery_date'))
@@ -19,18 +19,17 @@ def home(request):
 
             batch = (WarehouseStock.objects
             .filter(is_active = True)
-            .values('batch__productname')
+            .values('batch__productname__productname')
             .annotate(dcount=Sum('current_stock'))
-            .order_by()
+            .order_by('batch__productname__productname','-dcount')
             )
 
             warehouse = Warehouse.objects
             wh = ["Overall"]
             for x in list(warehouse.values_list('name', flat=True)):
                 wh.append(x)
-            for l in batch:
-                 name = Product.objects.get(pk=l['batch__productname'])
-                 l['name'] = name
+
+
             return render(request, 'home/dashboard.html', {'batches': batch, 'warehouses':wh, 'warehousestocks':warehousestocks, 'update':update})
         else:
             warehouse = Warehouse.objects
@@ -43,29 +42,23 @@ def home(request):
             batch = (WarehouseStock.objects
             .filter(is_active = True)
             .filter(name = Warehouse.objects.get(name = request.POST['city']))
-            .values('batch__productname')
+            .values('batch__productname__productname')
             .annotate(dcount=Sum('current_stock'))
-            .order_by()
+            .order_by('batch__productname__productname','-dcount')
             )
-
-            for l in batch:
-                 name = Product.objects.get(pk=l["batch__productname"])
-                 l['name'] = name
 
             return render(request, 'home/dashboard.html', {'warehouses':wh, 'batches': batch, 'warehousestocks':warehousestocks, 'update':update})
 
     else:
         batch = (WarehouseStock.objects
         .filter(is_active = True)
-        .values('batch__productname')
+        .values('batch__productname__productname')
         .annotate(dcount=Sum('current_stock'))
-        .order_by()
+        .order_by('batch__productname__productname','-dcount')
         )
         warehouse = Warehouse.objects
         wh = ["Overall"]
         for x in list(warehouse.values_list('name', flat=True)):
             wh.append(x)
-        for l in batch:
-             name = Product.objects.get(pk=l['batch__productname'])
-             l['name'] = name
+
         return render(request, 'home/dashboard.html', {'batches': batch, 'warehouses':wh, 'warehousestocks':warehousestocks, 'update':update})

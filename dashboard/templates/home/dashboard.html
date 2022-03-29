@@ -27,13 +27,13 @@
         </div>
         <div class="row pt-3">
           <!-- Count item widget-->
-          {% for batch in batches %}
+          {% for batch in batches%}
           <div class="col-xl-3 col-md-4 col-6 pt-3">
             <div class="wrapper count-title d-flex">
               <div class="icon"><img src="{% static '/img/milk.png' %}" width= 30rmp;></img></div>
               <div class="name">
                 <a href="#">
-                <strong class="text-uppercase">{{ batch.name}}</strong></a>
+                <strong class="text-uppercase">{{ batch.batch__productname__productname}}</strong></a>
                 {% if batch.dcount < 30 %}
                   <div class="count-number red" style="color: rgb(255,0,0)">{{ batch.dcount }}</div>
                 {% else %}
