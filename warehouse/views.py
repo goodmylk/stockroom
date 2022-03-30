@@ -21,7 +21,7 @@ def whouse(request, warehouse_id):
     .filter(~Q(delivery_date__week = date.today().isocalendar()[1]))
     .filter(warehouse_name = Warehouse.objects.get(pk = warehouse_id))
     .filter(~Q(type="ST"))
-    .filter(batch_number__is_active=True)
+    .filter(batch_number__productname__is_active=True)
     .annotate(week=ExtractWeek('delivery_date'))
     .values('week','batch_number__productname')
     .annotate(sum_quantity=Sum('quantity'))
@@ -36,7 +36,7 @@ def whouse(request, warehouse_id):
         wk_avg[k].append(q['sum_quantity'])
 
     d_avg = []
-    for l in wk_avg:
+    for l in sorted(wk_avg):
         name = Product.objects.get(pk=l)
         current_stock = (WarehouseStock.objects
                     .filter(is_active = True)
